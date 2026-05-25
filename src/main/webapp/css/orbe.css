@@ -1,0 +1,176 @@
+/* Importando a fonte Montserrat do Google */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap');
+
+/* --- 1. O PADRÃO DE CORES (VARIÁVEIS) --- */
+:root {
+    /* Fundo Principal: Azul muito escuro (Quase preto) */
+    --bg-void: #0B0E14;
+
+    /* Fundo dos Cards/Paineis: Um tom sutilmente mais claro para dar profundidade */
+    --bg-surface: #151A22;
+
+    /* A "Luz" e Sombras: Vermelho Vinho para contrastar com a noite */
+    --cor-magia-vinho: #8B1E28;
+    --cor-magia-brilho: #E63946; /* Versão mais clara para o efeito Neon/Sombra */
+
+    /* Textos: Branco Gelo para leitura perfeita no fundo escuro */
+    --text-primary: #F0F2F5;
+    --text-secondary: #8A94A6;
+}
+
+/* --- 2. RESET E CORPO DA PÁGINA --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: var(--bg-void);
+    color: var(--text-primary);
+    min-height: 100vh;
+    /* Um leve brilho radial no topo para simular uma fonte de luz distante */
+    background-image: radial-gradient(circle at 50% 0%, #1a202c 0%, transparent 50%);
+}
+
+/* --- 3. ESTRUTURA DOS CARDS DE RPG --- */
+.card-personagem {
+    background-color: var(--bg-surface);
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Borda muito sutil */
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.3s ease;
+
+    /* Efeito de Sombra Básica (Escura) */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* O Efeito de Luz ao passar o mouse (Hover) */
+.card-personagem:hover {
+    transform: translateY(-5px);
+    border-color: var(--cor-magia-vinho);
+    /* A Sombra vira uma Luz (Glow) usando a cor do Vinho/Vermelho */
+    box-shadow: 0 10px 40px rgba(230, 57, 70, 0.15), 0 0 15px rgba(139, 30, 40, 0.5);
+}
+
+/* --- 4. BOTÕES MODERNOS COM GLOW --- */
+.btn-orbe {
+    background: linear-gradient(135deg, var(--cor-magia-vinho), #5a1018);
+    color: var(--text-primary);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+    /* Brilho natural do botão */
+    box-shadow: 0 4px 15px rgba(139, 30, 40, 0.4);
+}
+
+.btn-orbe:hover {
+    background: var(--cor-magia-brilho);
+    /* Brilho intenso ao focar (Efeito Mágico) */
+    box-shadow: 0 0 20px rgba(230, 57, 70, 0.6);
+}
+
+/* Estrutura do Cabeçalho e Rodapé */
+header#menu {
+    padding: 20px 40px;
+    background-color: var(--bg-surface);
+    border-bottom: 2px solid var(--cor-magia-vinho);
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* Transformando o <a> num botão perfeito */
+a.btn-orbe {
+    text-decoration: none;
+    display: inline-block; /* Permite colocar padding como num botão */
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    margin-top: 40px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- O GRID RESPONSIVO DA FICHA --- */
+.grid-layout {
+    display: grid;
+    /* A MÁGICA: Esquerda(1 fração), Centro(2 frações), Direita(1 fração) */
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+    max-width: 1400px; /* Impede que o layout fique esticado demais em ecrãs gigantes */
+    margin: 40px auto; /* Centraliza a caixa na página */
+    padding: 0 20px;
+}
+
+/* O estilo visual de cada uma das 3 colunas */
+.coluna-card {
+    background-color: var(--bg-surface);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Para dar um destaque sutil à ficha central */
+.card-central {
+    border-top: 3px solid var(--cor-magia-vinho);
+}
+
+/* Títulos das seções */
+.titulo-secao {
+    color: var(--cor-magia-brilho);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+/* --- INVENTÁRIO EXPANSÍVEL --- */
+.secao-inferior {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Estilo da tag semântica <details> */
+.caixa-expansivel {
+    background-color: var(--bg-surface);
+    border-radius: 8px;
+    border-left: 4px solid var(--cor-magia-vinho);
+    padding: 10px 20px;
+}
+
+/* Estilo da tag <summary> (O botão que abre/fecha) */
+.caixa-expansivel summary {
+    cursor: pointer;
+    margin-bottom: 0;
+    padding: 15px 0;
+    list-style: none; /* Remove a setinha padrão nalguns navegadores */
+}
+
+/* Lista de itens dentro do inventário */
+#lista-itens {
+    list-style: none;
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#lista-itens li {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.destaque {
+    color: var(--cor-magia-brilho);
+    font-weight: 600;
+}

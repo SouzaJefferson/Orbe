@@ -1,10 +1,37 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>teste</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Orbe - O Vazio Arcano</title>
+
+    <link rel="stylesheet" href="css/orbe.css">
 </head>
 <body>
- <h1>Hello World</h1>
+
+<header id="menu">
+    <nav> <button> <a href="./ficha.html">Minhas fichas</a></button></nav>
+
+</header>
+
+<div style="max-width: 800px; margin: 50px auto; text-align: center;">
+
+    <h1 style="margin-bottom: 40px; text-transform: uppercase; letter-spacing: 3px;">
+        Minhas Fichas
+    </h1>
+
+    <div class="card-personagem" style="max-width: 350px; margin: 0 auto;">
+        <h2 style="color: var(--cor-magia-brilho);">Legolas</h2>
+        <p style="color: var(--text-secondary); margin: 10px 0;">Elfo - Arqueiro</p>
+        <p>Nível: 5 | XP: 3600</p>
+
+        <a href="./pag/ficha.html"><button class="btn-orbe" style="margin-top: 20px; width: 100%;">
+            Abrir Ficha
+        </button></a>
+    </div>
+
+</div>
+
+<script src="js/app.js"></script>
 </body>
 </html>
