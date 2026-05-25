@@ -1,0 +1,11 @@
+# Ignorar arquivos do IntelliJ
+.idea/
+*.iml
+
+# Ignorar arquivos compilados do Java
+out/
+target/
+*.class
+
+# Ignorar senhas e configurações locais (opcional, mas recomendado)
+*.log
