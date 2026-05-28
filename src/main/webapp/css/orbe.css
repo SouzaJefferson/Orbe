@@ -1,19 +1,22 @@
-/* Importando a fonte Montserrat do Google */
+/* Importando a fonte do Google */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap');
 
-/* --- 1. O PADRÃO DE CORES (VARIÁVEIS) --- */
+/* --- 1. O NOVO PADRÃO DE CORES --- */
 :root {
-    /* Fundo Principal: Azul muito escuro (Quase preto) */
-    --bg-void: #0B0E14;
+    /* Fundo Principal: O tom de preto profundo da sua imagem */
+    --bg-void: #050505;
 
-    /* Fundo dos Cards/Paineis: Um tom sutilmente mais claro para dar profundidade */
-    --bg-surface: #151A22;
+    /* Fundo dos Painéis/Formulários: O preto mais cinza com toque azulado */
+    --bg-surface: #13171F;
 
-    /* A "Luz" e Sombras: Vermelho Vinho para contrastar com a noite */
-    --cor-magia-vinho: #8B1E28;
-    --cor-magia-brilho: #E63946; /* Versão mais clara para o efeito Neon/Sombra */
+    /* O novo efeito de luz: Branco puro */
+    --cor-luz-branca: #FFFFFF;
+    --cor-luz-suave: rgba(255, 255, 255, 0.15);
 
-    /* Textos: Branco Gelo para leitura perfeita no fundo escuro */
+    /* Detalhes e destaques (O vermelho vinho aplicado estrategicamente) */
+    --cor-detalhe-vermelho: #490101;
+
+    /* Textos */
     --text-primary: #F0F2F5;
     --text-secondary: #8A94A6;
 }
@@ -30,65 +33,18 @@ body {
     background-color: var(--bg-void);
     color: var(--text-primary);
     min-height: 100vh;
-    /* Um leve brilho radial no topo para simular uma fonte de luz distante */
-    background-image: radial-gradient(circle at 50% 0%, #1a202c 0%, transparent 50%);
+    /* Brilho radial branco/cinza muito suave no topo */
+    background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
 }
 
-/* --- 3. ESTRUTURA DOS CARDS DE RPG --- */
-.card-personagem {
-    background-color: var(--bg-surface);
-    border: 1px solid rgba(255, 255, 255, 0.05); /* Borda muito sutil */
-    border-radius: 12px;
-    padding: 24px;
-    transition: all 0.3s ease;
-
-    /* Efeito de Sombra Básica (Escura) */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-/* O Efeito de Luz ao passar o mouse (Hover) */
-.card-personagem:hover {
-    transform: translateY(-5px);
-    border-color: var(--cor-magia-vinho);
-    /* A Sombra vira uma Luz (Glow) usando a cor do Vinho/Vermelho */
-    box-shadow: 0 10px 40px rgba(230, 57, 70, 0.15), 0 0 15px rgba(139, 30, 40, 0.5);
-}
-
-/* --- 4. BOTÕES MODERNOS COM GLOW --- */
-.btn-orbe {
-    background: linear-gradient(135deg, var(--cor-magia-vinho), #5a1018);
-    color: var(--text-primary);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s;
-    /* Brilho natural do botão */
-    box-shadow: 0 4px 15px rgba(139, 30, 40, 0.4);
-}
-
-.btn-orbe:hover {
-    background: var(--cor-magia-brilho);
-    /* Brilho intenso ao focar (Efeito Mágico) */
-    box-shadow: 0 0 20px rgba(230, 57, 70, 0.6);
-}
-
-/* Estrutura do Cabeçalho e Rodapé */
+/* --- 3. CABEÇALHO E RODAPÉ (COM O DETALHE VERMELHO) --- */
 header#menu {
     padding: 20px 40px;
     background-color: var(--bg-surface);
-    border-bottom: 2px solid var(--cor-magia-vinho);
+    /* A linha vermelha separando o menu do resto da página, como você pediu */
+    border-bottom: 2px solid var(--cor-detalhe-vermelho);
     display: flex;
     justify-content: flex-start;
-}
-
-/* Transformando o <a> num botão perfeito */
-a.btn-orbe {
-    text-decoration: none;
-    display: inline-block; /* Permite colocar padding como num botão */
 }
 
 footer {
@@ -100,34 +56,64 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* --- O GRID RESPONSIVO DA FICHA --- */
+/* --- 4. BOTÕES MODERNOS COM GLOW BRANCO --- */
+a.btn-orbe, button.btn-orbe {
+    text-decoration: none;
+    display: inline-block;
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+a.btn-orbe:hover, button.btn-orbe:hover {
+    border-color: var(--cor-luz-branca);
+    /* O novo efeito de magia branco */
+    box-shadow: 0 0 15px var(--cor-luz-suave), 0 0 5px rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* --- 5. O GRID RESPONSIVO DA FICHA --- */
 .grid-layout {
     display: grid;
-    /* A MÁGICA: Esquerda(1 fração), Centro(2 frações), Direita(1 fração) */
     grid-template-columns: 1fr 2fr 1fr;
     gap: 20px;
-    max-width: 1400px; /* Impede que o layout fique esticado demais em ecrãs gigantes */
-    margin: 40px auto; /* Centraliza a caixa na página */
+    max-width: 1400px;
+    margin: 40px auto;
     padding: 0 20px;
 }
 
-/* O estilo visual de cada uma das 3 colunas */
-.coluna-card {
+/* Cards padrão (Fundo Cinza/Azulado) */
+.coluna-card, .card-personagem {
     background-color: var(--bg-surface);
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
 }
 
-/* Para dar um destaque sutil à ficha central */
+/* O toque vermelho no topo do card central */
 .card-central {
-    border-top: 3px solid var(--cor-magia-vinho);
+    border-top: 3px solid var(--cor-detalhe-vermelho);
 }
 
-/* Títulos das seções */
+/* Efeito Hover nos Cards (Glow Branco) */
+.coluna-card:hover, .card-personagem:hover {
+    transform: translateY(-5px);
+    border-color: var(--cor-luz-branca);
+    box-shadow: 0 10px 40px var(--cor-luz-suave), 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Títulos brancos para destacar */
 .titulo-secao {
-    color: var(--cor-magia-brilho);
+    color: var(--cor-luz-branca);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -135,30 +121,32 @@ footer {
     font-size: 1.2rem;
 }
 
-/* --- INVENTÁRIO EXPANSÍVEL --- */
+/* --- 6. INVENTÁRIO EXPANSÍVEL (COM DETALHE VERMELHO) --- */
 .secao-inferior {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-/* Estilo da tag semântica <details> */
 .caixa-expansivel {
     background-color: var(--bg-surface);
     border-radius: 8px;
-    border-left: 4px solid var(--cor-magia-vinho);
+    /* O vermelho aparecendo aqui de novo para marcar a lateral do inventário */
+    border-left: 4px solid var(--cor-detalhe-vermelho);
     padding: 10px 20px;
 }
 
-/* Estilo da tag <summary> (O botão que abre/fecha) */
 .caixa-expansivel summary {
     cursor: pointer;
     margin-bottom: 0;
     padding: 15px 0;
-    list-style: none; /* Remove a setinha padrão nalguns navegadores */
+    list-style: none;
+    color: var(--cor-luz-branca);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* Lista de itens dentro do inventário */
 #lista-itens {
     list-style: none;
     padding: 20px 0;
@@ -171,6 +159,224 @@ footer {
 }
 
 .destaque {
-    color: var(--cor-magia-brilho);
+    color: var(--cor-luz-branca);
     font-weight: 600;
+}
+/* --- TRATAMENTO DA IMAGEM DO PERSONAGEM --- */
+.moldura-imagem {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Mantém um quadrado perfeito */
+    border-radius: 8px;
+    overflow: hidden; /* Corta o que sobrar da imagem */
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background-color: #000;
+}
+
+.moldura-imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Faz a imagem preencher o espaço sem distorcer (não esmaga) */
+}
+
+/* --- FORMULÁRIOS E INPUTS (MODO ESCURO) --- */
+.input-orbe, .textarea-orbe, .select-orbe {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.input-orbe:focus, .textarea-orbe:focus, .select-orbe:focus {
+    outline: none;
+    border-color: var(--cor-luz-branca);
+    box-shadow: 0 0 10px var(--cor-luz-suave);
+}
+
+.input-curto {
+    width: 80px;
+}
+
+/* --- ATRIBUTOS E STATUS --- */
+.nivel-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.02);
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--cor-detalhe-vermelho);
+}
+
+.destaque-branco {
+    color: var(--cor-luz-branca);
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.grid-atributos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.atributo-item label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.subtitulo-secao {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 20px 0 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 5px;
+}
+
+.grid-substatus {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* --- HABILIDADES (MINI CARDS) --- */
+.form-container {
+    background-color: rgba(0,0,0,0.2);
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.divisor {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--cor-detalhe-vermelho), transparent);
+    margin: 20px 0;
+}
+
+.card-mini {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-left: 2px solid var(--cor-luz-branca);
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.card-mini-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.badge-tipo {
+    background-color: rgba(139, 30, 40, 0.2);
+    color: #ffb3b3;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    border: 1px solid var(--cor-detalhe-vermelho);
+}
+
+.card-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-acao {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.btn-acao:hover {
+    color: var(--cor-luz-branca);
+}
+
+.btn-perigo:hover {
+    color: var(--cor-detalhe-vermelho);
+}
+
+.btn-pequeno {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+}
+
+/* --- INVENTÁRIO (CARDS HORIZONTAIS) --- */
+.form-inventario {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr auto;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.grid-inventario {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.card-item {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.card-item:hover {
+    border-color: var(--cor-detalhe-vermelho);
+}
+
+.item-img {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-right: 15px;
+    background-color: #000;
+}
+
+.item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-info {
+    flex-grow: 1;
+}
+
+.item-info h4 {
+    color: var(--cor-luz-branca);
+    margin-bottom: 5px;
+}
+
+.item-info p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.item-acoes {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding-left: 10px;
+    border-left: 1px solid rgba(255,255,255,0.05);
 }

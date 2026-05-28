@@ -19,27 +19,132 @@
     <section id="figPersonagem" class="coluna-card">
         <h2 class="titulo-secao">Retrato</h2>
         <div class="moldura-imagem">
+            <img id="img-personagem" src="../src/fotorpg1.png" alt="Retrato do Personagem">
+        </div>
+        <input type="file" id="input-foto" class="input-orbe" accept="image/*" style="margin-top: 15px;">
+
+        <div class="info-basica" style="margin-top: 20px;">
+            <label>Nome:</label>
+            <input type="text" id="nome-personagem" class="input-orbe" placeholder="Nome do Personagem" readonly>
+
+            <label>Estilo:</label>
+            <input type="text" id="estilo-personagem" class="input-orbe" placeholder="Estilo" readonly>
+
+            <label>Raça:</label>
+            <input type="text" id="raca-personagem" class="input-orbe" placeholder="Raça" readonly>
         </div>
     </section>
 
     <section id="ficha" class="coluna-card card-central">
-        <h2 class="titulo-secao">Atributos</h2>
+        <h2 class="titulo-secao">Atributos e Status</h2>
+
+        <div class="nivel-box">
+            <div>
+                <span>Nível:</span>
+                <span id="nivel-valor" class="destaque-branco">1</span>
+            </div>
+            <div>
+                <label>Exp:</label>
+                <input type="number" id="xp-valor" class="input-orbe input-curto" placeholder="0">
+            </div>
+        </div>
+
+        <div class="grid-atributos">
+            <div class="atributo-item">
+                <label>Força</label>
+                <input type="number" class="input-orbe" placeholder="0">
+            </div>
+            <div class="atributo-item">
+                <label>Velocidade</label>
+                <input type="number" class="input-orbe" placeholder="0">
+            </div>
+            <div class="atributo-item">
+                <label>Destreza</label>
+                <input type="number" class="input-orbe" placeholder="0">
+            </div>
+            <div class="atributo-item">
+                <label>Vigor</label>
+                <input type="number" class="input-orbe" placeholder="0">
+            </div>
+            <div class="atributo-item">
+                <label>Sabedoria</label>
+                <input type="number" class="input-orbe" placeholder="0">
+            </div>
+            <div class="atributo-item">
+                <label>Inteligência</label>
+                <input type="number" class="input-orbe" placeholder="0">
+            </div>
+        </div>
+
+        <h3 class="subtitulo-secao">Energias e Status Calculados</h3>
+        <div class="grid-substatus">
+            <div class="substatus-item">Vida: <span class="destaque-branco" id="status-vida">0</span></div>
+            <div class="substatus-item">Energia Sagrada: <span class="destaque-branco" id="status-sagrada">0</span></div>
+            <div class="substatus-item">Energia Amaldiçoada: <span class="destaque-branco" id="status-amaldicoada">0</span></div>
+            <div class="substatus-item">Pesquisa: <span class="destaque-branco" id="status-pesquisa">0</span></div>
+            <div class="substatus-item">Conhecimento: <span class="destaque-branco" id="status-conhecimento">0</span></div>
+        </div>
     </section>
 
     <section id="hab" class="coluna-card">
         <h2 class="titulo-secao">Habilidades</h2>
+
+        <div id="hab-create" class="form-container">
+            <input type="text" class="input-orbe" placeholder="Título da Habilidade">
+            <select class="select-orbe">
+                <option value="Tatica" selected>Tática (Padrão)</option>
+                <option value="Inspiracao">Inspiração</option>
+                <option value="Postura">Postura</option>
+            </select>
+            <textarea class="textarea-orbe" rows="3" placeholder="Descrição da habilidade..."></textarea>
+            <button class="btn-orbe btn-pequeno" style="width: 100%; margin-top: 10px;">Adicionar Habilidade</button>
+        </div>
+
+        <hr class="divisor">
+
+        <div id="hab-load" class="lista-cards">
+            <div class="card-mini">
+                <div class="card-mini-header">
+                    <h4>Golpe Preciso</h4>
+                    <span class="badge-tipo">Tática</span>
+                </div>
+                <p>O jogador ataca um ponto fraco exposto do inimigo.</p>
+                <div class="card-acoes">
+                    <button class="btn-acao">Editar</button>
+                    <button class="btn-acao btn-perigo">Excluir</button>
+                </div>
+            </div>
+        </div>
     </section>
 
 </main>
 
 <section id="inventario" class="secao-inferior">
-    <details class="caixa-expansivel">
+    <details class="caixa-expansivel" open>
         <summary class="titulo-secao">Mochila & Inventário</summary>
 
-        <ul id="lista-itens">
-            <li><span class="destaque">Item:</span> Poção de Vida</li>
-            <li><span class="destaque">Arma:</span> Espada Longa</li>
-        </ul>
+        <div id="pack-create" class="form-inventario">
+            <input type="text" class="input-orbe" placeholder="Nome do Item">
+            <input type="text" class="input-orbe" placeholder="URL da Imagem (Opcional)">
+            <textarea class="textarea-orbe" rows="1" placeholder="Descrição"></textarea>
+            <button class="btn-orbe btn-pequeno">Adicionar</button>
+        </div>
+
+        <div id="pack-load" class="grid-inventario">
+            <div class="card-item">
+                <div class="item-img">
+                    <img src="../src/fotorpg1.png" alt="Item">
+                </div>
+                <div class="item-info">
+                    <h4>Poção de Cura</h4>
+                    <p>Restaura 50 pontos de vida.</p>
+                </div>
+                <div class="item-acoes">
+                    <button class="btn-acao">✏️</button>
+                    <button class="btn-acao btn-perigo">🗑️</button>
+                </div>
+            </div>
+        </div>
     </details>
 </section>
 
