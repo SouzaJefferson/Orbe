@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import dao.FichaDAO;
 import model.Ficha;
 
+import strategy.CalculadoraDeEvolucao;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +48,39 @@ public class FichaServlet extends HttpServlet {
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"erro\": \"Erro interno ao buscar as fichas.\"}");
+            e.printStackTrace();
+        }
+    }
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        try {
+            // 1. Pega o JSON que veio do front-end e transforma num objeto Ficha
+            Gson tradutor = new Gson();
+            Ficha fichaRecebida = tradutor.fromJson(request.getReader(), Ficha.class);
+
+            // 2. A MÁGICA DO STRATEGY: Recalcula o nível com base no XP que o jogador digitou!
+            CalculadoraDeEvolucao calculadora = new CalculadoraDeEvolucao();
+            int novoNivel = calculadora.subirDeNivel(fichaRecebida.getRaca(), fichaRecebida.getExp());
+            fichaRecebida.setNivel(novoNivel);
+
+            // 3. Manda o DAO atualizar o banco
+            FichaDAO dao = new FichaDAO();
+            boolean sucesso = dao.atualizarAtributos(fichaRecebida);
+
+            if (sucesso) {
+                response.getWriter().write("{\"mensagem\": \"Ficha atualizada e nível recalculado!\"}");
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().write("{\"erro\": \"Falha ao salvar no banco de dados.\"}");
+            }
+
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"erro\": \"Erro ao processar os dados.\"}");
             e.printStackTrace();
         }
     }

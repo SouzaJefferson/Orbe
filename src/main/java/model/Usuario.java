@@ -6,6 +6,7 @@ public class Usuario {
     private String username;
     private String email;
     private String senha;
+    private String tipo;
 
     // Construtor Vazio: Necessário para muitas tecnologias Java Web
     public Usuario() {
@@ -31,4 +32,8 @@ public class Usuario {
 
     public String getSenha() { return senha; }
     public void setSenha(String senha) { this.senha = senha; }
+
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
+}
 }

@@ -3,6 +3,7 @@ package model;
 public class Ficha {
     // Atributos que mapeiam a tabela do banco de dados
     private int id;
+    private Integer campanhaId; // Usamos Integer (com I maiúsculo) porque pode ser nulo caso ele não tenha campanha ainda
     private int usuarioId;
     private String nomePersonagem;
     private String estilos;
@@ -69,6 +70,9 @@ public class Ficha {
     // Getters e Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+
+    public Integer getCampanhaId() { return campanhaId; }
+    public void setCampanhaId(Integer campanhaId) { this.campanhaId = campanhaId; }
 
     public int getUsuarioId() { return usuarioId; }
     public void setUsuarioId(int usuarioId) { this.usuarioId = usuarioId; }

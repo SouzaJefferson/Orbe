@@ -20,7 +20,7 @@
         <h2 class="titulo-secao">Retrato</h2>
 
         <div class="moldura-imagem" id="caixa-retrato">
-            <img id="img-personagem" src="../src/fotorpg1.png" alt="Retrato do Personagem">
+            <img id="img-personagem" src="../src/image.png" alt="Retrato do Personagem">
         </div>
 
         <div class="controles-imagem">
@@ -56,31 +56,16 @@
         </div>
 
         <div class="grid-atributos">
-            <div class="atributo-item">
-                <label>Força</label>
-                <input type="number" class="input-orbe" placeholder="0">
-            </div>
-            <div class="atributo-item">
-                <label>Velocidade</label>
-                <input type="number" class="input-orbe" placeholder="0">
-            </div>
-            <div class="atributo-item">
-                <label>Destreza</label>
-                <input type="number" class="input-orbe" placeholder="0">
-            </div>
-            <div class="atributo-item">
-                <label>Vigor</label>
-                <input type="number" class="input-orbe" placeholder="0">
-            </div>
-            <div class="atributo-item">
-                <label>Sabedoria</label>
-                <input type="number" class="input-orbe" placeholder="0">
-            </div>
-            <div class="atributo-item">
-                <label>Inteligência</label>
-                <input type="number" class="input-orbe" placeholder="0">
-            </div>
+            <div class="atributo-item"><label>Força</label><input type="number" id="attr-forca" class="input-orbe" placeholder="0"></div>
+            <div class="atributo-item"><label>Velocidade</label><input type="number" id="attr-velocidade" class="input-orbe" placeholder="0"></div>
+            <div class="atributo-item"><label>Destreza</label><input type="number" id="attr-destreza" class="input-orbe" placeholder="0"></div>
+            <div class="atributo-item"><label>Vigor</label><input type="number" id="attr-vigor" class="input-orbe" placeholder="0"></div>
+            <div class="atributo-item"><label>Sabedoria</label><input type="number" id="attr-sabedoria" class="input-orbe" placeholder="0"></div>
+            <div class="atributo-item"><label>Inteligência</label><input type="number" id="attr-inteligencia" class="input-orbe" placeholder="0"></div>
         </div>
+
+        <button id="btn-salvar-ficha" class="btn-orbe" style="width: 100%; margin-top: 20px; background-color: var(--cor-detalhe-vermelho);">Salvar Alterações
+        </button>
 
         <h3 class="subtitulo-secao">Energias e Status Calculados</h3>
         <div class="grid-substatus">
@@ -96,14 +81,14 @@
         <h2 class="titulo-secao">Habilidades</h2>
 
         <div id="hab-create" class="form-container">
-            <input type="text" class="input-orbe" placeholder="Título da Habilidade">
-            <select class="select-orbe">
-                <option value="Tatica" selected>Tática (Padrão)</option>
-                <option value="Inspiracao">Inspiração</option>
+            <input type="text" id="hab-titulo" class="input-orbe" placeholder="Título da Habilidade">
+            <select id="hab-tipo" class="select-orbe">
+                <option value="Tática" selected>Tática (Padrão)</option>
+                <option value="Inspiração">Inspiração</option>
                 <option value="Postura">Postura</option>
             </select>
-            <textarea class="textarea-orbe" rows="3" placeholder="Descrição da habilidade..."></textarea>
-            <button class="btn-orbe btn-pequeno" style="width: 100%; margin-top: 10px;">Adicionar Habilidade</button>
+            <textarea id="hab-desc" class="textarea-orbe" rows="3" placeholder="Descrição..."></textarea>
+            <button id="btn-add-hab" class="btn-orbe btn-pequeno" style="width: 100%; margin-top: 10px;">Adicionar Habilidade</button>
         </div>
 
         <hr class="divisor">
@@ -130,108 +115,19 @@
         <summary class="titulo-secao">Mochila & Inventário</summary>
 
         <div id="pack-create" class="form-inventario-linha">
-            <input type="text" class="input-orbe" placeholder="Nome do Item">
-            <input type="text" class="input-orbe" placeholder="Tipo (Ex: Arma, Poção)">
-            <input type="text" class="input-orbe" placeholder="Efeito/Dano">
-            <textarea class="textarea-orbe" rows="1" placeholder="Descrição rápida..."></textarea>
-            <button class="btn-orbe btn-pequeno">Adicionar</button>
-        </div>
+            <input type="text" id="item-titulo" class="input-orbe" placeholder="Nome do Item">
 
-        <div class="cabecalho-tabela">
-            <div>Ícone</div>
-            <div>Item e Descrição</div>
-            <div>Tipo</div>
-            <div>Efeito/Dano</div>
-            <div style="text-align: right;">Ações</div>
+            <input type="file" id="item-foto" class="input-orbe" accept="image/*" title="Imagem do Item">
+
+            <textarea id="item-desc" class="textarea-orbe" rows="1" placeholder="Descrição completa..."></textarea>
+
+            <button id="btn-add-item" class="btn-orbe btn-pequeno">Adicionar</button>
         </div>
 
         <div id="pack-load" class="lista-inventario-vertical">
-
-            <div class="linha-item">
-                <div class="item-img-mini">
-                    <img src="../src/fotorpg1.png" alt="Ícone">
-                </div>
-                <div class="item-detalhes">
-                    <h4>Machado de Batalha</h4>
-                    <p>Um machado pesado com lâmina dupla, forjado em aço escuro. C:\Users\jefferson.souza\Downloads\apache-tomcat-9.0.118\apache-tomcat-9.0.118\bin\catalina.bat run
-                        [2026-05-28 03:22:31,897] Artifact webapp: Waiting for server connection to start artifact deployment…
-                        Using CATALINA_BASE:   "C:\Users\jefferson.souza\AppData\Local\JetBrains\IntelliJIdea2026.1\tomcat\5fe91289-714d-4d0b-b29f-2f8c2d8b82e0"
-                        Using CATALINA_HOME:   "C:\Users\jefferson.souza\Downloads\apache-tomcat-9.0.118\apache-tomcat-9.0.118"
-                        Using CATALINA_TMPDIR: "C:\Users\jefferson.souza\Downloads\apache-tomcat-9.0.118\apache-tomcat-9.0.118\temp"
-                        Using JRE_HOME:        "C:\Users\jefferson.souza\.jdks\openjdk-26.0.1"
-                        Using CLASSPATH:       "C:\Users\jefferson.souza\Downloads\apache-tomcat-9.0.118\apache-tomcat-9.0.118\bin\bootstrap.jar;C:\Users\jefferson.souza\Downloads\apache-tomcat-9.0.118\apache-tomcat-9.0.118\bin\tomcat-juli.jar"
-                        Using CATALINA_OPTS:   ""
-                        NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
-                        28-May-2026 15:22:33.607 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.118
-                        28-May-2026 15:22:33.609 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          May 1 2026 19:30:30 UTC
-                        28-May-2026 15:22:33.610 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.118.0
-                        28-May-2026 15:22:33.612 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Windows 10
-                        28-May-2026 15:22:33.613 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            10.0
-                        28-May-2026 15:22:33.614 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
-                        28-May-2026 15:22:33.614 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             C:\Users\jefferson.souza\.jdks\openjdk-26.0.1
-                        28-May-2026 15:22:33.615 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           26.0.1+8-34
-                        28-May-2026 15:22:33.616 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Oracle Corporation
-                        28-May-2026 15:22:33.616 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         C:\Users\jefferson.souza\AppData\Local\JetBrains\IntelliJIdea2026.1\tomcat\5fe91289-714d-4d0b-b29f-2f8c2d8b82e0
-                        28-May-2026 15:22:33.616 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         C:\Users\jefferson.souza\Downloads\apache-tomcat-9.0.118\apache-tomcat-9.0.118
-                        28-May-2026 15:22:33.617 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
-                        28-May-2026 15:22:33.617 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
-                        28-May-2026 15:22:33.617 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
-                        28-May-2026 15:22:33.617 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
-                        28-May-2026 15:22:33.617 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util=ALL-UNNAMED
-                        28-May-2026 15:22:33.618 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
-                        28-May-2026 15:22:33.618 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
-                        28-May-2026 15:22:33.618 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=C:\Users\jefferson.souza\AppData\Local\JetBrains\IntelliJIdea2026.1\tomcat\5fe91289-714d-4d0b-b29f-2f8c2d8b82e0\conf\logging.properties
-                        28-May-2026 15:22:33.619 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
-                        28-May-2026 15:22:33.619 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcom.sun.management.jmxremote=
-                        28-May-2026 15:22:33.619 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcom.sun.management.jmxremote.port=1099
-                        28-May-2026 15:22:33.619 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcom.sun.management.jmxremote.ssl=false
-                        28-May-2026 15:22:33.619 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcom.sun.management.jmxremote.password.file=C:\Users\jefferson.souza\AppData\Local\JetBrains\IntelliJIdea2026.1\tomcat\5fe91289-714d-4d0b-b29f-2f8c2d8b82e0\jmxremote.password
-                        28-May-2026 15:22:33.620 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcom.sun.management.jmxremote.access.file=C:\Users\jefferson.souza\AppData\Local\JetBrains\IntelliJIdea2026.1\tomcat\5fe91289-714d-4d0b-b29f-2f8c2d8b82e0\jmxremote.access
-                        28-May-2026 15:22:33.621 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.rmi.server.hostname=127.0.0.1
-                        28-May-2026 15:22:33.621 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
-                        28-May-2026 15:22:33.621 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
-                        28-May-2026 15:22:33.621 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dsun.io.useCanonCaches=false
-                        28-May-2026 15:22:33.621 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dignore.endorsed.dirs=
-                        28-May-2026 15:22:33.622 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=C:\Users\jefferson.souza\AppData\Local\JetBrains\IntelliJIdea2026.1\tomcat\5fe91289-714d-4d0b-b29f-2f8c2d8b82e0
-                        28-May-2026 15:22:33.622 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=C:\Users\jefferson.souza\Downloads\apache-tomcat-9.0.118\apache-tomcat-9.0.118
-                        28-May-2026 15:22:33.622 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=C:\Users\jefferson.souza\Downloads\apache-tomcat-9.0.118\apache-tomcat-9.0.118\temp
-                        WARNING: A restricted method in java.lang.System has been called
-                        WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/C:/Users/jefferson.souza/Downloads/apache-tomcat-9.0.118/apache-tomcat-9.0.118/lib/tomcat-jni.jar)
-                        WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
-                        WARNING: Restricted methods will be blocked in a future release unless native access is enabled
-
-                        28-May-2026 15:22:33.636 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The Apache Tomcat Native library which allows using OpenSSL was not found on the java.library.path: [C:\Users\jefferson.souza\.jdks\openjdk-26.0.1\bin;C:\windows\Sun\Java\bin;C:\windows\system32;C:\windows;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Git\cmd;C:\Users\jefferson.souza\.local\bin;C:\Users\jefferson.souza\AppData\Local\Microsoft\WindowsApps;C:\Users\jefferson.souza\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\JetBrains\IntelliJ IDEA 2026.1.2\bin;.]
-                        28-May-2026 15:22:34.081 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
-                        28-May-2026 15:22:34.102 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [796] milliseconds
-                        28-May-2026 15:22:34.159 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
-                        28-May-2026 15:22:34.160 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.118]
-                        28-May-2026 15:22:34.175 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
-                        28-May-2026 15:22:34.230 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [127] milliseconds
-                        Connected to server
-                        [2026-05-28 03:22:34,551] Artifact webapp: Artifact is being deployed, please wait…
-                        28-May-2026 15:22:35.625 INFO [RMI TCP Connection(2)-127.0.0.1] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
-                        [2026-05-28 03:22:35,702] Artifact webapp: Artifact is deployed successfully
-                        [2026-05-28 03:22:35,704] Artifact webapp: Deploy took 1,153 milliseconds
-                        28-May-2026 15:22:44.195 INFO [Catalina-utility-2] org.apache.catalina.startup.HostConfig.deployDirectory Diretório de instalação da aplicação web [C:\Users\jefferson.souza\Downloads\apache-tomcat-9.0.118\apache-tomcat-9.0.118\webapps\manager]
-                        28-May-2026 15:22:44.542 INFO [Catalina-utility-2] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [C:\Users\jefferson.souza\Downloads\apache-tomcat-9.0.118\apache-tomcat-9.0.118\webapps\manager] has finished in [340] ms
-                    </p>
-                </div>
-                <div class="item-tipo">
-                    <span class="badge-tipo">Arma Comum</span>
-                </div>
-                <div class="item-efeito">
-                    <span class="destaque">1d8 + 2</span> cortante
-                </div>
-                <div class="item-acoes">
-                    <button class="btn-acao">Editar</button>
-                    <button class="btn-acao btn-perigo">Excluir</button>
-                </div>
-            </div>
-
         </div>
     </details>
 </section>
-
 <footer>Feito por Jefferson C Souza</footer>
 
 <script src="../js/app.js"></script>

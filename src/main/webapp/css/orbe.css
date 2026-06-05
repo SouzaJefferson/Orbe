@@ -408,13 +408,115 @@ a.btn-orbe:hover, button.btn-orbe:hover {
 
 
 /* --- INVENTÁRIO EM LISTA VERTICAL (ESTILO TABELA) --- */
+/* --- INVENTÁRIO EM LISTA VERTICAL (NOVO) --- */
 .form-inventario-linha {
     display: grid;
-    /* Grid: Nome | Tipo | Efeito | Descrição | Botão */
-    grid-template-columns: 2fr 1fr 1fr 3fr auto;
+    /* Redimensionado: Nome | Imagem(URL) | Descrição | Botão */
+    grid-template-columns: 2fr 2fr 4fr auto;
     gap: 10px;
     margin-bottom: 20px;
     align-items: start;
+}
+
+.lista-inventario-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.linha-item {
+    align-items: start;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.linha-item:hover {
+    border-color: var(--cor-luz-branca);
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+
+/* 1. SE TEM IMAGEM: A Imagem ganha 1 fração de espaço e os Textos ganham 4 frações */
+.linha-item.com-imagem {
+    display: grid;
+    grid-template-columns: 1fr 4fr 100px;
+    gap: 20px;
+}
+
+/* 2. SE NÃO TEM IMAGEM: O Texto estica e toma conta do card até bater nos botões */
+.linha-item.sem-imagem {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 20px;
+}
+
+/* --- A NOVA IMAGEM (MAIOR E DESTACADA) --- */
+..item-img-mini {
+    width: 100% !important; /* O !important obriga o navegador a esquecer o quadradinho antigo */
+    height: auto !important;
+    aspect-ratio: 1 / 1; /* Força o quadrado perfeito independentemente da largura */
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    background-color: transparent;
+}
+
+.item-img-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block; /* Remove espaços fantasmas debaixo da foto */
+}
+
+/* --- A ÁREA DE TEXTO (BLINDADA CONTRA BUGS) --- */
+.item-detalhes {
+    display: flex;
+    flex-direction: column;
+    /* O SEGREDO: Impede que textos gigantes quebrem o CSS Grid e empurrem a tela */
+    min-width: 0;
+}
+
+.item-detalhes h4 {
+    color: var(--cor-luz-branca);
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+
+    /* Força palavras infinitas a quebrarem de linha */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.item-descricao-scroll {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    /* Ajustámos a altura para alinhar perfeitamente com a imagem de 120px */
+    max-height: 110px;
+    overflow-y: auto;
+    padding-right: 10px;
+
+    /* A MÁGICA CONTRA O "AAAAA...": Se a palavra for maior que a tela, corta! */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+/* Deixando a barra de rolagem com um visual dark/moderno */
+.item-descricao-scroll::-webkit-scrollbar { width: 6px; }
+.item-descricao-scroll::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+.item-descricao-scroll::-webkit-scrollbar-thumb { background: var(--cor-detalhe-vermelho); border-radius: 4px; }
+
+/* --- BOTÕES ALINHADOS --- */
+.item-acoes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    height: 100%;
 }
 
 .cabecalho-tabela {
@@ -434,40 +536,11 @@ a.btn-orbe:hover, button.btn-orbe:hover {
 .lista-inventario-vertical {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-.linha-item {
-    display: grid;
-    /* Foto(50px) | Nome+Desc(3fr) | Tipo(1fr) | Efeito(1fr) | Botoes(100px) */
-    grid-template-columns: 50px 3fr 1fr 1fr 100px;
     gap: 15px;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 12px 15px;
-    border-radius: 6px;
-    transition: all 0.2s;
 }
 
-.linha-item:hover {
-    border-color: var(--cor-luz-branca);
-    background-color: rgba(255, 255, 255, 0.04);
-}
 
-.item-img-mini {
-    width: 50px;
-    height: 50px;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
 
-.item-img-mini img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 
 .item-detalhes h4 {
     color: var(--cor-luz-branca);
