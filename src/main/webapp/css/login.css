@@ -1,0 +1,9 @@
+@import url('orbe.css'); /* Puxa a base universal */
+
+.login-container { max-width: 400px; margin: 80px auto; text-align: center; }
+.login-box { background-color: var(--bg-surface); padding: 40px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.05); border-top: 4px solid var(--cor-detalhe-vermelho); }
+.logo-titulo { color: var(--cor-luz-branca); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 30px; }
+.toggle-links { margin-top: 20px; font-size: 0.9rem; color: var(--text-secondary); }
+.toggle-links span { color: var(--cor-luz-branca)!important; cursor: pointer; font-weight: bold; }
+.toggle-links span:hover { text-decoration: underline; }
+.escondido { display: none; }

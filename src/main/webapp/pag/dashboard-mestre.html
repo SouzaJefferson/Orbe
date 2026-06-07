@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Orbe - O Trono do Mestre</title>
+    <link rel="stylesheet" href="../css/orbe.css">
+</head>
+<body>
+
+<header id="menu">
+    <a href="dashboard-mestre.html" class="logo-orbe" title="Recarregar">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><radialGradient id="glowOrbe" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="40%" stop-color="#E63946" stop-opacity="0.8"/><stop offset="100%" stop-color="#8B1E28" stop-opacity="0"/></radialGradient></defs>
+            <circle cx="50" cy="50" r="44" fill="none" stroke="#8B1E28" stroke-width="2" stroke-dasharray="15 10" opacity="0.8"><animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="15s" repeatCount="indefinite"/></circle>
+            <circle cx="50" cy="50" r="36" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="20 5 5 5" opacity="0.6"><animateTransform attributeName="transform" type="rotate" from="360 50 50" to="0 50 50" dur="10s" repeatCount="indefinite"/></circle>
+            <circle cx="50" cy="50" r="28" fill="url(#glowOrbe)"/>
+            <polygon points="50,20 54,46 80,50 54,54 50,80 46,54 20,50 46,46" fill="#FFFFFF" opacity="0.9"/>
+        </svg>
+    </a>
+    <div style="margin-left: auto; display: flex; gap: 15px; align-items: center;">
+        <span id="nome-mestre" style="font-weight: bold; color: var(--cor-detalhe-vermelho);">Mestre</span>
+        <button onclick="fazerLogout()" class="btn-acao">Sair</button>
+    </div>
+</header>
+
+<main style="max-width: 1200px; margin: 40px auto; padding: 20px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 30px;">
+        <h1 class="titulo-secao" style="margin: 0;">Minhas Campanhas</h1>
+        <button class="btn-orbe" onclick="abrirModal()">+ Nova Campanha</button>
+    </div>
+
+    <div id="grid-campanhas" style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px;">
+    </div>
+
+    <h2 class="titulo-secao" style="margin-top: 50px; color: var(--text-secondary);" id="titulo-aventureiros">Aventureiros na Mesa</h2>
+    <div id="grid-aventureiros" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+        <p style="color: var(--text-secondary);">Selecione uma campanha acima para visualizar as fichas.</p>
+    </div>
+
+</main>
+
+<div class="modal-overlay" id="modal-criacao">
+    <div class="modal-box">
+        <h2 class="titulo-secao" style="font-size: 1.1rem; text-align: center;">Forjar Nova Campanha</h2>
+
+        <input type="text" id="campanha-nome" class="input-orbe" placeholder="Nome da Aventura (ex: As Minas de Moria)">
+        <input type="text" id="campanha-codigo" class="input-orbe" placeholder="Código de Convite (ex: MORIA123)" style="text-transform: uppercase;">
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button class="btn-orbe" style="width: 50%; background: transparent;" onclick="fecharModal()">Cancelar</button>
+            <button class="btn-orbe" style="width: 50%; background: var(--cor-detalhe-vermelho);" onclick="criarCampanha()">Criar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const URL_BASE = "http://localhost:8080/origin";
+    let mestreLogado = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioLocal = localStorage.getItem('orbe_usuario');
+        if (!usuarioLocal) { window.location.href = '../index.html'; return; }
+
+        mestreLogado = JSON.parse(usuarioLocal);
+        if(mestreLogado.tipo !== 'MESTRE') { window.location.href = '../index.html'; return; } // Segurança!
+
+        document.getElementById('nome-mestre').textContent = "Mestre " + mestreLogado.username;
+        carregarCampanhas();
+    });
+
+    function fazerLogout() { localStorage.removeItem('orbe_usuario'); window.location.href = '../index.html'; }
+
+    // --- MODAL ---
+    const modal = document.getElementById('modal-criacao');
+    function abrirModal() { modal.classList.add('ativo'); }
+    function fecharModal() { modal.classList.remove('ativo'); }
+
+    // --- CRIAR CAMPANHA ---
+    async function criarCampanha() {
+        const nome = document.getElementById('campanha-nome').value;
+        const codigo = document.getElementById('campanha-codigo').value.toUpperCase();
+        if(!nome || !codigo) return alert("Preencha todos os campos!");
+
+        const resposta = await fetch(`${URL_BASE}/api/campanhas`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mestreId: mestreLogado.id, nome: nome, codigo: codigo })
+        });
+
+        if(resposta.ok) {
+            alert("Campanha Forjada! Entregue o código aos seus jogadores.");
+            fecharModal();
+            carregarCampanhas();
+        } else {
+            alert("Falha! Este código de convite já existe no mundo. Tente outro.");
+        }
+    }
+
+    // --- CARREGAR CAMPANHAS DO MESTRE ---
+    async function carregarCampanhas() {
+        const grid = document.getElementById('grid-campanhas');
+        grid.innerHTML = 'Buscando rascunhos...';
+
+        const resposta = await fetch(`${URL_BASE}/api/campanhas?mestreId=${mestreLogado.id}`);
+        const campanhas = await resposta.json();
+
+        grid.innerHTML = '';
+        if(campanhas.length === 0) { grid.innerHTML = '<p>Você ainda não forjou nenhuma campanha.</p>'; return; }
+
+        campanhas.forEach(c => {
+            grid.innerHTML += `
+                <div style="min-width: 250px; padding: 20px; background: rgba(0,0,0,0.3); border: 1px solid var(--cor-detalhe-vermelho); border-radius: 8px; cursor: pointer; transition: 0.3s;"
+                     onmouseover="this.style.boxShadow='0 0 15px rgba(139,30,40,0.5)'"
+                     onmouseout="this.style.boxShadow='none'"
+                     onclick="carregarAventureiros(${c.id}, '${c.nome}')">
+                    <h3 style="color: var(--cor-luz-branca); margin-bottom: 10px;">${c.nome}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">CÓDIGO: <span style="color: #ffb3b3; font-weight: bold; font-family: monospace;">${c.codigo}</span></p>
+                </div>
+            `;
+        });
+    }
+
+    // --- CARREGAR FICHA DOS JOGADORES AO CLICAR NA CAMPANHA ---
+    async function carregarAventureiros(campanhaId, nomeCampanha) {
+        document.getElementById('titulo-aventureiros').innerHTML = `Aventureiros de: <span style="color: var(--cor-luz-branca);">${nomeCampanha}</span>`;
+        const grid = document.getElementById('grid-aventureiros');
+        grid.innerHTML = 'Verificando a mesa...';
+
+        const resposta = await fetch(`${URL_BASE}/api/fichas?campanhaId=${campanhaId}`);
+        const fichas = await resposta.json();
+
+        grid.innerHTML = '';
+        if(fichas.length === 0) { grid.innerHTML = '<p>Nenhum jogador usou o seu código de convite ainda.</p>'; return; }
+
+        fichas.forEach(f => {
+            grid.innerHTML += `
+                <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 6px; border-left: 3px solid var(--cor-luz-branca); text-align: center;">
+                    <h4 style="margin-bottom: 5px;">${f.nomePersonagem}</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 15px;">${f.raca} | ${f.estilos}</p>
+                    <p style="font-size: 0.8rem; margin-bottom: 10px;">Nv: ${f.nivel} | XP: ${f.exp}</p>
+                    <button class="btn-orbe btn-pequeno" style="width: 100%;" onclick="abrirFichaComoMestre(${f.id})">Inspecionar Ficha</button>
+                </div>
+            `;
+        });
+    }
+
+    function abrirFichaComoMestre(idFicha) {
+        localStorage.setItem('orbe_ficha_id', idFicha);
+        window.location.href = 'ficha.html';
+    }
+</script>
+</body>
+</html>

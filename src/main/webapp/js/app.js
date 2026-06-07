@@ -1,84 +1,75 @@
 // ============================================================================
-// 1. CONTROLOS DA IMAGEM DO PERSONAGEM
+// VARIÁVEIS GLOBAIS E CONFIGURAÇÃO
 // ============================================================================
-const panX = document.getElementById('pan-x');
-const panY = document.getElementById('pan-y');
-const imgPersonagem = document.getElementById('img-personagem');
-
-function atualizarPosicaoImagem() {
-    imgPersonagem.style.setProperty('--pos-x', `${panX.value}%`);
-    imgPersonagem.style.setProperty('--pos-y', `${panY.value}%`);
-}
-
-panX.addEventListener('input', atualizarPosicaoImagem);
-panY.addEventListener('input', atualizarPosicaoImagem);
-
-
-// ============================================================================
-// 2. COMUNICAÇÃO COM A API (AJUSTADO PARA A SUA URL /origin)
-// ============================================================================
-// AQUI ESTAVA O PROBLEMA: O nome do projeto no seu Tomcat é "origin"
 const URL_BASE = "http://localhost:8080/origin";
+let fichaAtualId = 0;
+let usuarioLogado = null;
 
+/// ============================================================================
+// 0. CONTROLE DE SESSÃO E INICIALIZAÇÃO
+// ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Sistema Orbe: A iniciar carregamento de dados...");
-    carregarFichasDoUsuario(1);
+    // 1. Verifica a sessão no navegador
+    const usuarioLocal = localStorage.getItem('orbe_usuario');
+    const fichaIdLocal = localStorage.getItem('orbe_ficha_id');
+
+    if (!usuarioLocal) {
+        alert("A sua conexão com o Vazio Arcano expirou. Faça login novamente.");
+        window.location.href = '../index.html';
+        return;
+    }
+
+    usuarioLogado = JSON.parse(usuarioLocal);
+
+    // Ajusta o Link da Logo (Botão Home) dependendo de quem está logado
+    const linkLogo = document.querySelector('.logo-orbe');
+    if (linkLogo) {
+        linkLogo.href = usuarioLogado.tipo === 'MESTRE' ? 'dashboard-mestre.html' : 'dashboard.html';
+    }
+
+    if (!fichaIdLocal) {
+        alert("Nenhuma ficha foi selecionada!");
+        window.location.href = usuarioLogado.tipo === 'MESTRE' ? 'dashboard-mestre.html' : 'dashboard.html';
+        return;
+    }
+
+    // 2. Chama a função passando os dados corretos da Sessão
+    carregarFichaEspecifica(usuarioLogado.id, parseInt(fichaIdLocal));
 });
 
-async function carregarFichasDoUsuario(usuarioId) {
+// Busca a ficha! Inteligência artificial para Mestre vs Jogador
+async function carregarFichaEspecifica(usuarioId, fichaIdSelecionada) {
     try {
-        const resposta = await fetch(`${URL_BASE}/api/fichas?usuarioId=${usuarioId}`);
+        // Se for Jogador, busca as fichas dele. Se for Mestre, busca o ID da ficha de forma absoluta!
+        let urlBusca = `${URL_BASE}/api/fichas?usuarioId=${usuarioId}`;
+        if (usuarioLogado.tipo === 'MESTRE') {
+            urlBusca = `${URL_BASE}/api/fichas?id=${fichaIdSelecionada}`;
+        }
+
+        const resposta = await fetch(urlBusca);
         if (!resposta.ok) throw new Error("Falha ao comunicar com o servidor.");
 
         const fichas = await resposta.json();
+        const personagemAtual = fichas.find(f => f.id === fichaIdSelecionada);
 
-        if (fichas && fichas.length > 0) {
-            const personagemAtual = fichas[0];
+        if (personagemAtual) {
             preencherDadosDaFicha(personagemAtual);
             carregarInventario(personagemAtual.id);
-
             carregarHabilidades(personagemAtual.id);
-
         } else {
-            console.log("Nenhuma ficha encontrada para este utilizador.");
+            console.log("Ficha não encontrada ou não pertence a este utilizador.");
+            window.location.href = usuarioLogado.tipo === 'MESTRE' ? 'dashboard-mestre.html' : 'dashboard.html';
         }
     } catch (erro) {
         console.error("Erro ao procurar ficha:", erro);
     }
 }
 
-function preencherDadosDaFicha(personagem) {
-    document.getElementById('nome-personagem').value = personagem.nomePersonagem || '';
-    document.getElementById('estilo-personagem').value = personagem.estilos || '';
-    document.getElementById('raca-personagem').value = personagem.raca || '';
-
-    document.getElementById('nivel-valor').textContent = personagem.nivel || 1;
-    document.getElementById('xp-valor').value = personagem.exp || 0;
-
-    const inputsAtributos = document.querySelectorAll('.grid-atributos input');
-    if (inputsAtributos.length >= 6) {
-        inputsAtributos[0].value = personagem.forca || 0;
-        inputsAtributos[1].value = personagem.velocidade || 0;
-        inputsAtributos[2].value = personagem.destreza || 0;
-        inputsAtributos[3].value = personagem.vigor || 0;
-        inputsAtributos[4].value = personagem.sabedoria || 0;
-        inputsAtributos[5].value = personagem.inteligencia || 0;
-    }
-
-    document.getElementById('status-vida').textContent = personagem.vida || 0;
-    document.getElementById('status-sagrada').textContent = personagem.sagrada || 0;
-    document.getElementById('status-amaldicoada').textContent = personagem.amaldicoada || 0;
-    document.getElementById('status-pesquisa').textContent = personagem.pesquisa || 0;
-    document.getElementById('status-conhecimento').textContent = personagem.conhecimento || 0;
-}
-
 // ============================================================================
-// 3. INJETAR E SALVAR OS DADOS DA FICHA
+// 1. PREENCHER E ATUALIZAR A FICHA PRINCIPAL
 // ============================================================================
-let fichaAtualId = 0; // Guarda o ID da ficha para sabermos quem atualizar
-
 function preencherDadosDaFicha(personagem) {
-    fichaAtualId = personagem.id; // Guarda o ID no momento que carrega
+    fichaAtualId = personagem.id;
 
     document.getElementById('nome-personagem').value = personagem.nomePersonagem || '';
     document.getElementById('estilo-personagem').value = personagem.estilos || '';
@@ -87,7 +78,6 @@ function preencherDadosDaFicha(personagem) {
     document.getElementById('nivel-valor').textContent = personagem.nivel || 1;
     document.getElementById('xp-valor').value = personagem.exp || 0;
 
-    // Agora é à prova de falhas! Cada atributo tem o seu ID:
     document.getElementById('attr-forca').value = personagem.forca || 0;
     document.getElementById('attr-velocidade').value = personagem.velocidade || 0;
     document.getElementById('attr-destreza').value = personagem.destreza || 0;
@@ -95,17 +85,17 @@ function preencherDadosDaFicha(personagem) {
     document.getElementById('attr-sabedoria').value = personagem.sabedoria || 0;
     document.getElementById('attr-inteligencia').value = personagem.inteligencia || 0;
 
+    // Atualiza os substatus matemáticos imediatamente
     calcularSubstatus();
 }
 
-// Ouve o clique do botão Salvar
+// Ouve o clique do botão Salvar Ficha
 document.getElementById('btn-salvar-ficha').addEventListener('click', salvarFicha);
 
 async function salvarFicha() {
-    // Recolhe os dados editados da tela
     const fichaEditada = {
         id: fichaAtualId,
-        raca: document.getElementById('raca-personagem').value, // O Java precisa da raça para o Strategy
+        raca: document.getElementById('raca-personagem').value,
         exp: parseInt(document.getElementById('xp-valor').value) || 0,
         forca: parseInt(document.getElementById('attr-forca').value) || 0,
         velocidade: parseInt(document.getElementById('attr-velocidade').value) || 0,
@@ -116,7 +106,6 @@ async function salvarFicha() {
     };
 
     try {
-        // PUT é o padrão REST da internet para "Atualizar/Modificar"
         const resposta = await fetch(`${URL_BASE}/api/fichas`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -125,8 +114,8 @@ async function salvarFicha() {
 
         if (resposta.ok) {
             alert("✨ Ficha atualizada com sucesso!");
-            // Recarrega a ficha para ver o nível novo calculado pelo Strategy no Java
-            carregarFichasDoUsuario(1);
+            // Recarrega apenas a ficha atual para ver o novo nível calculado!
+            carregarFichaEspecifica(usuarioLogado.id, fichaAtualId);
         } else {
             alert("Erro ao salvar a ficha.");
         }
@@ -136,60 +125,7 @@ async function salvarFicha() {
 }
 
 // ============================================================================
-// 4. CARREGAR INVENTÁRIO (NOVO LAYOUT)
-// ============================================================================
-async function carregarInventario(fichaId) {
-    try {
-        const resposta = await fetch(`${URL_BASE}/api/inventario?fichaId=${fichaId}`);
-        const itens = await resposta.json();
-
-        const containerInventario = document.getElementById('pack-load');
-        containerInventario.innerHTML = '';
-
-        if (itens.length === 0) {
-            containerInventario.innerHTML = '<p style="color: var(--text-secondary); padding: 15px;">A mochila está vazia.</p>';
-            return;
-        }
-
-        itens.forEach(item => {
-            let divImagem = '';
-            let classeGrid = 'sem-imagem'; // Por padrão, assume que não tem imagem
-
-            // Se o item tiver uma URL salva no banco de dados
-            if (item.imagem && item.imagem.trim() !== "") {
-                classeGrid = 'com-imagem';
-                divImagem = `
-                    <div class="item-img-mini">
-                        <img src="${item.imagem}" alt="Ícone">
-                    </div>
-                `;
-            }
-
-            // O HTML agora é dinâmico e adapta a classe do CSS
-            const linhaHTML = `
-                <div class="linha-item ${classeGrid}">
-                    ${divImagem}
-                    <div class="item-detalhes">
-                        <h4>${item.tituloItem}</h4>
-                        <div class="item-descricao-scroll">
-                            ${item.descricao || 'Sem descrição.'}
-                        </div>
-                    </div>
-                    <div class="item-acoes">
-                        <button class="btn-acao">Editar</button>
-                        <button class="btn-acao btn-perigo">Excluir</button>
-                    </div>
-                </div>
-            `;
-            containerInventario.innerHTML += linhaHTML;
-        });
-    } catch (erro) {
-        console.error("Erro ao buscar inventário:", erro);
-    }
-}
-
-// ============================================================================
-// 5. CÁLCULO DE SUBSTATUS EM TEMPO REAL
+// 2. CÁLCULO DE SUBSTATUS EM TEMPO REAL
 // ============================================================================
 function calcularSubstatus() {
     const forca = parseInt(document.getElementById('attr-forca').value) || 0;
@@ -197,14 +133,12 @@ function calcularSubstatus() {
     const sabedoria = parseInt(document.getElementById('attr-sabedoria').value) || 0;
     const inteligencia = parseInt(document.getElementById('attr-inteligencia').value) || 0;
 
-    // As suas fórmulas!
     const vida = (vigor * 5) + (forca * 0.5);
     const sagrada = vigor + (inteligencia * 2);
     const amaldicoada = vigor + (sabedoria * 2);
     const pesquisa = inteligencia;
     const conhecimento = sabedoria;
 
-    // Atualiza a tela (arredondando a vida para baixo caso dê quebrado)
     document.getElementById('status-vida').textContent = Math.floor(vida);
     document.getElementById('status-sagrada').textContent = sagrada;
     document.getElementById('status-amaldicoada').textContent = amaldicoada;
@@ -212,14 +146,12 @@ function calcularSubstatus() {
     document.getElementById('status-conhecimento').textContent = conhecimento;
 }
 
-// Faz o cálculo disparar sempre que o utilizador digitar nos atributos
 document.querySelectorAll('.grid-atributos input').forEach(input => {
     input.addEventListener('input', calcularSubstatus);
 });
 
-
 // ============================================================================
-// 6. CRUD DE HABILIDADES
+// 3. CRUD DE HABILIDADES
 // ============================================================================
 document.getElementById('btn-add-hab').addEventListener('click', async () => {
     const titulo = document.getElementById('hab-titulo').value;
@@ -228,12 +160,7 @@ document.getElementById('btn-add-hab').addEventListener('click', async () => {
 
     if (!titulo) return alert("Dê um título à habilidade!");
 
-    const novaHab = {
-        fichaId: fichaAtualId, // A variável que guardámos no passo anterior!
-        titulo: titulo,
-        tipo: tipo,
-        descricao: descricao
-    };
+    const novaHab = { fichaId: fichaAtualId, titulo: titulo, tipo: tipo, descricao: descricao };
 
     await fetch(`${URL_BASE}/api/habilidades`, {
         method: 'POST',
@@ -241,7 +168,6 @@ document.getElementById('btn-add-hab').addEventListener('click', async () => {
         body: JSON.stringify(novaHab)
     });
 
-    // Limpa os campos e recarrega a lista
     document.getElementById('hab-titulo').value = '';
     document.getElementById('hab-desc').value = '';
     carregarHabilidades(fichaAtualId);
@@ -250,7 +176,6 @@ document.getElementById('btn-add-hab').addEventListener('click', async () => {
 async function carregarHabilidades(fichaId) {
     const resposta = await fetch(`${URL_BASE}/api/habilidades?fichaId=${fichaId}`);
     const habilidades = await resposta.json();
-
     const container = document.getElementById('hab-load');
     container.innerHTML = '';
 
@@ -270,23 +195,25 @@ async function carregarHabilidades(fichaId) {
     });
 }
 
+window.excluirHabilidade = async function(habId) {
+    if (confirm("Tem a certeza que quer apagar esta habilidade?")) {
+        await fetch(`${URL_BASE}/api/habilidades?id=${habId}`, { method: 'DELETE' });
+        carregarHabilidades(fichaAtualId);
+    }
+};
 
 // ============================================================================
-// 7. UPLOAD DE IMAGEM GENÉRICO
+// 4. UPLOAD DE IMAGEM GENÉRICO
 // ============================================================================
-// Função que envia a foto física para o servidor e devolve o caminho salvo
 async function fazerUploadImagem(arquivo) {
     const formData = new FormData();
     formData.append('foto', arquivo);
 
     try {
-        const resposta = await fetch(`${URL_BASE}/api/upload`, {
-            method: 'POST',
-            body: formData
-        });
+        const resposta = await fetch(`${URL_BASE}/api/upload`, { method: 'POST', body: formData });
         if (resposta.ok) {
             const dados = await resposta.json();
-            return dados.url; // ex: "../uploads/123_foto.png"
+            return dados.url;
         }
     } catch (e) {
         console.error("Erro no upload da imagem:", e);
@@ -294,13 +221,10 @@ async function fazerUploadImagem(arquivo) {
     return "";
 }
 
-
 // ============================================================================
-// 8. CRUD DE INVENTÁRIO (ADICIONAR, EDITAR E EXCLUIR)
+// 5. CRUD DE INVENTÁRIO
 // ============================================================================
-
-// Variáveis para controlar o Modo de Edição
-let itensInventarioCache = []; // Guarda a lista de itens atual
+let itensInventarioCache = [];
 let idItemEmEdicao = null;
 let urlImagemAtualDoItemEditado = "";
 
@@ -309,7 +233,7 @@ async function carregarInventario(fichaId) {
         const resposta = await fetch(`${URL_BASE}/api/inventario?fichaId=${fichaId}`);
         const itens = await resposta.json();
 
-        itensInventarioCache = itens; // Guarda em cache para a edição rápida
+        itensInventarioCache = itens;
         const containerInventario = document.getElementById('pack-load');
         containerInventario.innerHTML = '';
 
@@ -331,14 +255,12 @@ async function carregarInventario(fichaId) {
                 `;
             }
 
-            const linhaHTML = `
+            containerInventario.innerHTML += `
                 <div class="linha-item ${classeGrid}">
                     ${divImagem}
                     <div class="item-detalhes">
                         <h4>${item.tituloItem}</h4>
-                        <div class="item-descricao-scroll">
-                            ${item.descricao || 'Sem descrição.'}
-                        </div>
+                        <div class="item-descricao-scroll">${item.descricao || 'Sem descrição.'}</div>
                     </div>
                     <div class="item-acoes">
                         <button class="btn-acao" onclick="prepararEdicaoItem(${item.id})">Editar</button>
@@ -346,43 +268,33 @@ async function carregarInventario(fichaId) {
                     </div>
                 </div>
             `;
-            containerInventario.innerHTML += linhaHTML;
         });
     } catch (erro) {
         console.error("Erro ao buscar inventário:", erro);
     }
 }
 
-// --- FUNÇÃO PARA EXCLUIR ---
 window.excluirItem = async function(itemId) {
-    if (confirm("Tem a certeza que deseja apagar este item? Esta ação é irreversível.")) {
+    if (confirm("Tem a certeza que deseja apagar este item?")) {
         await fetch(`${URL_BASE}/api/inventario?id=${itemId}`, { method: 'DELETE' });
-        carregarInventario(fichaAtualId); // Recarrega a tela
+        carregarInventario(fichaAtualId);
     }
 };
 
-// --- FUNÇÃO PARA PREPARAR O FORMULÁRIO PARA EDIÇÃO ---
 window.prepararEdicaoItem = function(itemId) {
-    // Procura no cache o item que clicámos
     const item = itensInventarioCache.find(i => i.id === itemId);
     if (!item) return;
 
-    // Preenche os campos
     document.getElementById('item-titulo').value = item.tituloItem;
     document.getElementById('item-desc').value = item.descricao;
-
-    // O input 'file' não pode ser preenchido por questões de segurança,
-    // por isso guardamos a foto velha na memória caso ele não envie uma nova
     urlImagemAtualDoItemEditado = item.imagem || "";
     idItemEmEdicao = item.id;
 
-    // Muda o aspeto do botão
     const btnAdd = document.getElementById('btn-add-item');
     btnAdd.textContent = "Salvar Edição";
-    btnAdd.style.backgroundColor = "var(--cor-detalhe-vermelho)"; // Dá um destaque
+    btnAdd.style.backgroundColor = "var(--cor-detalhe-vermelho)";
 };
 
-// --- AÇÃO DO BOTÃO (AGORA FAZ CREATE OU UPDATE) ---
 document.getElementById('btn-add-item').addEventListener('click', async () => {
     const titulo = document.getElementById('item-titulo').value;
     const desc = document.getElementById('item-desc').value;
@@ -393,8 +305,6 @@ document.getElementById('btn-add-item').addEventListener('click', async () => {
         return alert("O item precisa de ter pelo menos um Nome ou uma Imagem!");
     }
 
-    // Se estiver a editar, assume a foto velha por defeito.
-    // Mas se enviou um arquivoFoto novo, faz o upload e substitui a variável!
     let urlImagemSalva = urlImagemAtualDoItemEditado;
     if (arquivoFoto) {
         urlImagemSalva = await fazerUploadImagem(arquivoFoto);
@@ -408,7 +318,6 @@ document.getElementById('btn-add-item').addEventListener('click', async () => {
     };
 
     if (idItemEmEdicao) {
-        // == MODO EDIÇÃO (PUT) ==
         itemData.id = idItemEmEdicao;
         await fetch(`${URL_BASE}/api/inventario`, {
             method: 'PUT',
@@ -416,15 +325,12 @@ document.getElementById('btn-add-item').addEventListener('click', async () => {
             body: JSON.stringify(itemData)
         });
 
-        // Reseta o formulário e tira do modo edição
         idItemEmEdicao = null;
         urlImagemAtualDoItemEditado = "";
         const btnAdd = document.getElementById('btn-add-item');
         btnAdd.textContent = "Adicionar";
         btnAdd.style.backgroundColor = "transparent";
-
     } else {
-        // == MODO CRIAÇÃO (POST) ==
         await fetch(`${URL_BASE}/api/inventario`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -432,7 +338,6 @@ document.getElementById('btn-add-item').addEventListener('click', async () => {
         });
     }
 
-    // Limpa campos
     document.getElementById('item-titulo').value = '';
     document.getElementById('item-desc').value = '';
     inputFoto.value = '';
@@ -440,12 +345,18 @@ document.getElementById('btn-add-item').addEventListener('click', async () => {
     carregarInventario(fichaAtualId);
 });
 
+// ============================================================================
+// 6. CONTROLOS DA IMAGEM DO PERSONAGEM (PÂNICA)
+// ============================================================================
+const panX = document.getElementById('pan-x');
+const panY = document.getElementById('pan-y');
+const imgPersonagem = document.getElementById('img-personagem');
 
-
-// Para deletar chamando a API
-window.excluirHabilidade = async function(habId) {
-    if (confirm("Tem a certeza que quer apagar esta habilidade?")) {
-        await fetch(`${URL_BASE}/api/habilidades?id=${habId}`, { method: 'DELETE' });
-        carregarHabilidades(fichaAtualId); // Atualiza a tela
+if (panX && panY && imgPersonagem) {
+    function atualizarPosicaoImagem() {
+        imgPersonagem.style.setProperty('--pos-x', `${panX.value}%`);
+        imgPersonagem.style.setProperty('--pos-y', `${panY.value}%`);
     }
-};
+    panX.addEventListener('input', atualizarPosicaoImagem);
+    panY.addEventListener('input', atualizarPosicaoImagem);
+}

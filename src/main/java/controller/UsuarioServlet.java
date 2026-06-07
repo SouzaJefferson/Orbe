@@ -42,4 +42,27 @@ public class UsuarioServlet extends HttpServlet {
             response.getWriter().write("{\"erro\": \"Erro interno ao buscar usuários do Sistema Orbe.\"}");
         }
     }
+
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+
+        try {
+            Usuario novoUsuario = new Gson().fromJson(request.getReader(), Usuario.class);
+            UsuarioDAO dao = new UsuarioDAO();
+
+            if (dao.cadastrar(novoUsuario)) {
+                response.setStatus(HttpServletResponse.SC_CREATED);
+                response.getWriter().write("{\"mensagem\": \"Conta criada com sucesso!\"}");
+            } else {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"erro\": \"E-mail já registado ou dados inválidos.\"}");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"erro\": \"Erro no servidor.\"}");
+        }
+    }
 }

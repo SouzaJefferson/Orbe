@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Orbe - Painel do Jogador</title>
+    <link rel="stylesheet" href="../css/orbe.css">
+</head>
+<body>
+
+<header id="menu">
+    <a href="dashboard.html" class="logo-orbe" title="Recarregar">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><radialGradient id="glowOrbe" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="40%" stop-color="#E63946" stop-opacity="0.8"/><stop offset="100%" stop-color="#8B1E28" stop-opacity="0"/></radialGradient></defs>
+            <circle cx="50" cy="50" r="44" fill="none" stroke="#8B1E28" stroke-width="2" stroke-dasharray="15 10" opacity="0.8"><animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="15s" repeatCount="indefinite"/></circle>
+            <circle cx="50" cy="50" r="36" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="20 5 5 5" opacity="0.6"><animateTransform attributeName="transform" type="rotate" from="360 50 50" to="0 50 50" dur="10s" repeatCount="indefinite"/></circle>
+            <circle cx="50" cy="50" r="28" fill="url(#glowOrbe)"/>
+            <polygon points="50,20 54,46 80,50 54,54 50,80 46,54 20,50 46,46" fill="#FFFFFF" opacity="0.9"/>
+        </svg>
+    </a>
+    <div style="margin-left: auto; display: flex; gap: 15px; align-items: center;">
+        <span id="nome-jogador" style="font-weight: bold; color: var(--cor-luz-branca);">Jogador</span>
+        <button onclick="fazerLogout()" class="btn-acao btn-perigo">Sair</button>
+    </div>
+</header>
+
+<main style="max-width: 1000px; margin: 40px auto; padding: 20px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 30px;">
+        <h1 class="titulo-secao" style="margin: 0;">Minhas Fichas</h1>
+        <button class="btn-orbe" onclick="abrirModal()">+ Nova Ficha</button>
+    </div>
+
+    <div id="grid-fichas" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+    </div>
+
+</main>
+
+<div class="modal-overlay" id="modal-criacao">
+    <div class="modal-box">
+
+        <div id="fase-codigo">
+            <h2 class="titulo-secao" style="font-size: 1.1rem; text-align: center;">Entrar numa Campanha</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-bottom: 15px;">Digite o código fornecido pelo seu Mestre.</p>
+
+            <input type="text" id="input-codigo" class="input-orbe" placeholder="EX: ORBE-123" style="text-align: center; text-transform: uppercase;">
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-orbe" style="width: 50%; background: transparent;" onclick="fecharModal()">Cancelar</button>
+                <button class="btn-orbe" style="width: 50%; background: var(--cor-detalhe-vermelho);" onclick="verificarCodigo()">Verificar</button>
+            </div>
+        </div>
+
+        <div id="fase-personagem" style="display: none;">
+            <h2 class="titulo-secao" style="font-size: 1.1rem; text-align: center; color: var(--cor-luz-branca);">Forjar Personagem</h2>
+            <p id="nome-campanha-sucesso" style="color: #ffb3b3; font-size: 0.85rem; text-align: center; margin-bottom: 15px;"></p>
+
+            <input type="text" id="personagem-nome" class="input-orbe" placeholder="Nome do Personagem">
+
+            <select id="personagem-raca" class="select-orbe">
+                <option value="Humano" selected>Raça: Humano</option>
+                <option value="Elfo">Raça: Elfo</option>
+                <option value="Anão">Raça: Anão</option>
+            </select>
+
+            <input type="text" id="personagem-estilo" class="input-orbe" placeholder="Estilo (Ex: Guerreiro, Arqueiro)">
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-orbe" style="width: 100%; background: var(--cor-detalhe-vermelho);" onclick="criarFicha()">Forjar e Entrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const URL_BASE = "http://localhost:8080/origin";
+    let usuarioLogado = null;
+    let campanhaValidadaId = null;
+
+    // 1. VERIFICAR QUEM ESTÁ LOGADO
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioLocal = localStorage.getItem('orbe_usuario');
+        if (!usuarioLocal) {
+            window.location.href = '../index.html'; // Manda pro login se não tiver logado
+            return;
+        }
+
+        usuarioLogado = JSON.parse(usuarioLocal);
+        document.getElementById('nome-jogador').textContent = "Jogador: " + usuarioLogado.username;
+
+        carregarMinhasFichas();
+    });
+
+    function fazerLogout() {
+        localStorage.removeItem('orbe_usuario');
+        window.location.href = '../index.html';
+    }
+
+    // 2. CARREGAR FICHAS NO DASHBOARD
+    async function carregarMinhasFichas() {
+        const grid = document.getElementById('grid-fichas');
+        grid.innerHTML = '<p>Carregando fichas...</p>';
+
+        const resposta = await fetch(`${URL_BASE}/api/fichas?usuarioId=${usuarioLogado.id}`);
+        const fichas = await resposta.json();
+
+        grid.innerHTML = '';
+        if(fichas.length === 0) {
+            grid.innerHTML = '<p style="color: var(--text-secondary);">Você ainda não tem nenhum personagem forjado.</p>';
+            return;
+        }
+
+        fichas.forEach(f => {
+            grid.innerHTML += `
+                <div class="coluna-card" style="text-align: center;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 0 auto 15px auto; border: 2px solid var(--cor-detalhe-vermelho);">
+                        <img src="${f.imagem || '../src/fotorpg1.png'}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h3 style="color: var(--cor-luz-branca);">${f.nomePersonagem}</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">${f.raca} - ${f.estilos}</p>
+                    <p style="font-size: 0.85rem; margin: 10px 0;">Nível: ${f.nivel} | XP: ${f.exp}</p>
+
+                    <button class="btn-orbe" style="width: 100%; padding: 8px;" onclick="abrirFicha(${f.id})">Abrir Ficha</button>
+                </div>
+            `;
+        });
+    }
+
+    function abrirFicha(idFicha) {
+        // Guarda no navegador a ficha que vamos abrir antes de mudar de página
+        localStorage.setItem('orbe_ficha_id', idFicha);
+        window.location.href = 'ficha.html';
+    }
+
+    // 3. CONTROLE DO POP-UP (MODAL)
+    const modal = document.getElementById('modal-criacao');
+    function abrirModal() {
+        modal.classList.add('ativo');
+        document.getElementById('fase-codigo').style.display = 'block';
+        document.getElementById('fase-personagem').style.display = 'none';
+        document.getElementById('input-codigo').value = '';
+    }
+    function fecharModal() { modal.classList.remove('ativo'); }
+
+    // 4. VERIFICAR O CÓDIGO DA CAMPANHA
+    async function verificarCodigo() {
+        const codigo = document.getElementById('input-codigo').value.trim();
+        if(!codigo) return alert("Digite um código!");
+
+        const resposta = await fetch(`${URL_BASE}/api/campanhas?codigo=${codigo}`);
+
+        if (resposta.ok) {
+            const campanha = await resposta.json();
+            campanhaValidadaId = campanha.id;
+
+            // Sucesso! Esconde o campo de código e mostra o formulário de personagem
+            document.getElementById('fase-codigo').style.display = 'none';
+            document.getElementById('fase-personagem').style.display = 'block';
+            document.getElementById('nome-campanha-sucesso').textContent = `Conectado à Campanha: ${campanha.nome}`;
+        } else {
+            alert("Código de campanha não encontrado. Verifique com o seu Mestre.");
+        }
+    }
+
+    // 5. FINALMENTE: CRIAR O PERSONAGEM
+    async function criarFicha() {
+        const nome = document.getElementById('personagem-nome').value;
+        const raca = document.getElementById('personagem-raca').value;
+        const estilo = document.getElementById('personagem-estilo').value;
+
+        if(!nome || !estilo) return alert("Preencha o nome e o estilo!");
+
+        const novaFicha = {
+            usuarioId: usuarioLogado.id,
+            campanhaId: campanhaValidadaId,
+            nomePersonagem: nome,
+            raca: raca,
+            estilos: estilo
+        };
+
+        const resposta = await fetch(`${URL_BASE}/api/fichas`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(novaFicha)
+        });
+
+        if(resposta.ok) {
+            alert("Personagem forjado e vinculado à Campanha com sucesso!");
+            fecharModal();
+            carregarMinhasFichas(); // Atualiza a tela com o novo personagem
+        } else {
+            alert("Erro ao forjar personagem.");
+        }
+    }
+</script>
+</body>
+</html>

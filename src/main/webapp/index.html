@@ -4,34 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Orbe - O Vazio Arcano</title>
-
-    <link rel="stylesheet" href="css/orbe.css">
+    <link rel="stylesheet" href="./css/login.css">
+    <style>
+        /* Estilos específicos para a caixa de login para não poluir o orbe.css */
+        .login-container {
+            max-width: 400px;
+            margin: 80px auto;
+            text-align: center;
+        }
+        .login-box {
+            background-color: var(--bg-surface);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-top: 4px solid var(--cor-detalhe-vermelho);
+        }
+        .logo-titulo {
+            color: var(--cor-luz-branca);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+        .toggle-links {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .toggle-links span {
+            color: var(--cor-detalhe-vermelho);
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .toggle-links span:hover { text-decoration: underline; }
+        .escondido { display: none; }
+    </style>
 </head>
 <body>
 
-<header id="menu">
-    <nav> <button> <a href="./ficha.html">Minhas fichas</a></button></nav>
+<div class="login-container">
+    <h1 class="logo-titulo">Sistema Orbe</h1>
 
-</header>
+    <div class="login-box">
 
-<div style="max-width: 800px; margin: 50px auto; text-align: center;">
+        <div id="form-login">
+            <h3 style="color: var(--text-secondary); margin-bottom: 20px;">Iniciar Sessão</h3>
+            <input type="email" id="login-email" class="input-orbe" placeholder="E-mail">
+            <input type="password" id="login-senha" class="input-orbe" placeholder="Senha">
+            <button id="btn-login" class="btn-orbe" style="width: 100%; margin-top: 15px;">Entrar</button>
+            <div class="toggle-links">
+                Não tem conta? <span onclick="alternarTelas()">Crie uma agora</span>
+            </div>
+        </div>
 
-    <h1 style="margin-bottom: 40px; text-transform: uppercase; letter-spacing: 3px;">
-        Minhas Fichas
-    </h1>
+        <div id="form-cadastro" class="escondido">
+            <h3 style="color: var(--text-secondary); margin-bottom: 20px;">Forjar Nova Conta</h3>
+            <input type="text" id="cad-nome" class="input-orbe" placeholder="Nome ou Apelido">
+            <input type="email" id="cad-email" class="input-orbe" placeholder="E-mail">
+            <input type="password" id="cad-senha" class="input-orbe" placeholder="Senha">
 
-    <div class="card-personagem" style="max-width: 350px; margin: 0 auto;">
-        <h2 style="color: var(--cor-magia-brilho);">Legolas</h2>
-        <p style="color: var(--text-secondary); margin: 10px 0;">Elfo - Arqueiro</p>
-        <p>Nível: 5 | XP: 3600</p>
+            <select id="cad-tipo" class="select-orbe" style="margin-top: 10px;">
+                <option value="JOGADOR">Sou um Jogador</option>
+                <option value="MESTRE">Sou um Mestre</option>
+            </select>
 
-        <a href="./pag/ficha.html"><button class="btn-orbe" style="margin-top: 20px; width: 100%;">
-            Abrir Ficha
-        </button></a>
+            <button id="btn-cadastrar" class="btn-orbe" style="width: 100%; margin-top: 15px; background-color: var(--cor-detalhe-vermelho);">Cadastrar</button>
+            <div class="toggle-links">
+                Já tem uma conta? <span onclick="alternarTelas()">Faça Login</span>
+            </div>
+        </div>
+
     </div>
-
 </div>
 
-<script src="js/app.js"></script>
+<script>
+    const URL_BASE = "http://localhost:8080/origin";
+
+    function alternarTelas() {
+        document.getElementById('form-login').classList.toggle('escondido');
+        document.getElementById('form-cadastro').classList.toggle('escondido');
+    }
+
+    // --- LÓGICA DE CADASTRO ---
+    document.getElementById('btn-cadastrar').addEventListener('click', async () => {
+        const nome = document.getElementById('cad-nome').value;
+        const email = document.getElementById('cad-email').value;
+        const senha = document.getElementById('cad-senha').value;
+        const tipo = document.getElementById('cad-tipo').value;
+
+        if(!nome || !email || !senha) return alert("Preencha todos os campos!");
+
+        const resposta = await fetch(`${URL_BASE}/api/usuarios`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username:nome, email, senha, tipo })
+        });
+
+        if (resposta.ok) {
+            alert("Conta forjada com sucesso! Faça login para continuar.");
+            alternarTelas(); // Volta para a tela de login
+        } else {
+            alert("Erro ao cadastrar. O E-mail já pode estar em uso.");
+        }
+    });
+
+    // --- LÓGICA DE LOGIN ---
+    document.getElementById('btn-login').addEventListener('click', async () => {
+        const email = document.getElementById('login-email').value;
+        const senha = document.getElementById('login-senha').value;
+
+        if(!email || !senha) return alert("Preencha os campos!");
+
+        const resposta = await fetch(`${URL_BASE}/api/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, senha })
+        });
+
+        if (resposta.ok) {
+            const usuario = await resposta.json();
+
+            // GUARDA O USUÁRIO NO NAVEGADOR! Isso é o segredo de uma SPA!
+            localStorage.setItem('orbe_usuario', JSON.stringify(usuario));
+
+            // Redireciona dependendo de quem ele é (Faremos estas telas na Fase 3!)
+            if (usuario.tipo === 'MESTRE') {
+                alert(`Bem-vindo, Mestre ${usuario.nome}! Indo para suas Campanhas...`);
+                window.location.href = 'pag/dashboard-mestre.html';
+            } else {
+                alert(`Bem-vindo, Jogador ${usuario.nome}! Indo para suas Fichas...`);
+                // Temporariamente vamos mandar para a ficha atual, na fase 3 será um dashboard
+                window.location.href = 'pag/ficha.html';
+            }
+        } else {
+            alert("E-mail ou senha incorretos.");
+        }
+    });
+</script>
 </body>
 </html>

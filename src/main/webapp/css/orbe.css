@@ -1,555 +1,77 @@
-/* Importando a fonte do Google */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap');
 
-/* --- 1. O NOVO PADRÃO DE CORES --- */
+/* --- 1. VARIÁVEIS UNIVERSAIS --- */
 :root {
-    /* Fundo Principal: O tom de preto profundo da sua imagem */
     --bg-void: #050505;
-
-    /* Fundo dos Painéis/Formulários: O preto mais cinza com toque azulado */
     --bg-surface: #13171F;
-
-    /* O novo efeito de luz: Branco puro */
     --cor-luz-branca: #FFFFFF;
     --cor-luz-suave: rgba(255, 255, 255, 0.15);
-
-    /* Detalhes e destaques (O vermelho vinho aplicado estrategicamente) */
-    --cor-detalhe-vermelho: #490101;
-
-    /* Textos */
+    --cor-detalhe-vermelho: #8B1E28;
     --text-primary: #F0F2F5;
     --text-secondary: #8A94A6;
 }
 
-/* --- 2. RESET E CORPO DA PÁGINA --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
-}
+/* --- 2. RESET GERAL --- */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+body { background-color: var(--bg-void); color: var(--text-primary); min-height: 100vh; background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 50%); }
 
-body {
-    background-color: var(--bg-void);
-    color: var(--text-primary);
-    min-height: 100vh;
-    /* Brilho radial branco/cinza muito suave no topo */
-    background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
-}
-
-/* --- 3. CABEÇALHO E RODAPÉ (COM O DETALHE VERMELHO) --- */
+/* --- 3. CABEÇALHO (MENU CENTRALIZADO) --- */
 header#menu {
-    padding: 20px 40px;
+    padding: 15px 40px;
     background-color: var(--bg-surface);
-    /* A linha vermelha separando o menu do resto da página, como você pediu */
     border-bottom: 2px solid var(--cor-detalhe-vermelho);
     display: flex;
-    justify-content: flex-start;
-}
-
-footer {
-    text-align: center;
-    padding: 30px;
-    margin-top: 40px;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* --- 4. BOTÕES MODERNOS COM GLOW BRANCO --- */
-a.btn-orbe, button.btn-orbe {
-    text-decoration: none;
-    display: inline-block;
-    background-color: transparent;
-    color: var(--text-primary);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 12px 24px;
-    border-radius: 6px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-a.btn-orbe:hover, button.btn-orbe:hover {
-    border-color: var(--cor-luz-branca);
-    /* O novo efeito de magia branco */
-    box-shadow: 0 0 15px var(--cor-luz-suave), 0 0 5px rgba(255, 255, 255, 0.5);
-    transform: translateY(-2px);
-}
-
-/* --- 5. O GRID RESPONSIVO DA FICHA --- */
-.grid-layout {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    gap: 20px;
-    max-width: 1400px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-
-/* Cards padrão (Fundo Cinza/Azulado) */
-.coluna-card, .card-personagem {
-    background-color: var(--bg-surface);
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.3s ease;
-}
-
-/* O toque vermelho no topo do card central */
-.card-central {
-    border-top: 3px solid var(--cor-detalhe-vermelho);
-}
-
-/* Efeito Hover nos Cards (Glow Branco) */
-.coluna-card:hover, .card-personagem:hover {
-    transform: translateY(-5px);
-    border-color: var(--cor-luz-branca);
-    box-shadow: 0 10px 40px var(--cor-luz-suave), 0 0 15px rgba(255, 255, 255, 0.3);
-}
-
-/* Títulos brancos para destacar */
-.titulo-secao {
-    color: var(--cor-luz-branca);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
-    font-size: 1.2rem;
-}
-
-/* --- 6. INVENTÁRIO EXPANSÍVEL (COM DETALHE VERMELHO) --- */
-.secao-inferior {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.caixa-expansivel {
-    background-color: var(--bg-surface);
-    border-radius: 8px;
-    /* O vermelho aparecendo aqui de novo para marcar a lateral do inventário */
-    border-left: 4px solid var(--cor-detalhe-vermelho);
-    padding: 10px 20px;
-}
-
-.caixa-expansivel summary {
-    cursor: pointer;
-    margin-bottom: 0;
-    padding: 15px 0;
-    list-style: none;
-    color: var(--cor-luz-branca);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-#lista-itens {
-    list-style: none;
-    padding: 20px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-#lista-itens li {
-    padding: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-}
-
-.destaque {
-    color: var(--cor-luz-branca);
-    font-weight: 600;
-}
-/* --- TRATAMENTO DA IMAGEM DO PERSONAGEM --- */
-.moldura-imagem {
-    width: 100%;
-    aspect-ratio: 1 / 1; /* Mantém um quadrado perfeito */
-    border-radius: 8px;
-    overflow: hidden; /* Corta o que sobrar da imagem */
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    background-color: #000;
-}
-
-.moldura-imagem img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Faz a imagem preencher o espaço sem distorcer (não esmaga) */
-}
-
-/* --- FORMULÁRIOS E INPUTS (MODO ESCURO) --- */
-.input-orbe, .textarea-orbe, .select-orbe {
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    transition: all 0.3s;
-}
-
-.input-orbe:focus, .textarea-orbe:focus, .select-orbe:focus {
-    outline: none;
-    border-color: var(--cor-luz-branca);
-    box-shadow: 0 0 10px var(--cor-luz-suave);
-}
-
-.input-curto {
-    width: 80px;
-}
-
-/* --- ATRIBUTOS E STATUS --- */
-.nivel-box {
-    display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Mantém a logo perfeitamente no meio */
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.02);
-    padding: 15px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    border-left: 3px solid var(--cor-detalhe-vermelho);
+    position: sticky; /* O menu acompanha a rolagem da página */
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
-.destaque-branco {
-    color: var(--cor-luz-branca);
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-.grid-atributos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.atributo-item label {
-    display: block;
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-}
-
-.subtitulo-secao {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    margin: 20px 0 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 5px;
-}
-
-.grid-substatus {
+.logo-orbe {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* --- HABILIDADES (MINI CARDS) --- */
-.form-container {
-    background-color: rgba(0,0,0,0.2);
-    padding: 15px;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.divisor {
-    border: 0;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--cor-detalhe-vermelho), transparent);
-    margin: 20px 0;
-}
-
-.card-mini {
-    background-color: rgba(255, 255, 255, 0.02);
-    border-left: 2px solid var(--cor-luz-branca);
-    padding: 12px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-}
-
-.card-mini-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.badge-tipo {
-    background-color: rgba(139, 30, 40, 0.2);
-    color: #ffb3b3;
-    font-size: 0.7rem;
-    padding: 3px 8px;
-    border-radius: 12px;
-    border: 1px solid var(--cor-detalhe-vermelho);
-}
-
-.card-acoes {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.btn-acao {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-size: 0.85rem;
-}
-
-.btn-acao:hover {
-    color: var(--cor-luz-branca);
-}
-
-.btn-perigo:hover {
-    color: var(--cor-detalhe-vermelho);
-}
-
-.btn-pequeno {
-    padding: 8px 16px;
-    font-size: 0.85rem;
-}
-
-/* --- INVENTÁRIO (CARDS HORIZONTAIS) --- */
-.form-inventario {
-    display: grid;
-    grid-template-columns: 1fr 1fr 2fr auto;
-    gap: 10px;
-    margin-bottom: 20px;
-    align-items: center;
-}
-
-.grid-inventario {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
-}
-
-.card-item {
-    display: flex;
-    background-color: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 10px;
-    transition: all 0.3s ease;
-}
-
-.card-item:hover {
-    border-color: var(--cor-detalhe-vermelho);
-}
-
-.item-img {
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-right: 15px;
-    background-color: #000;
-}
-
-.item-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.item-info {
-    flex-grow: 1;
-}
-
-.item-info h4 {
-    color: var(--cor-luz-branca);
-    margin-bottom: 5px;
-}
-
-.item-info p {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-.item-acoes {
-    display: flex;
-    flex-direction: column;
     justify-content: center;
-    gap: 10px;
-    padding-left: 10px;
-    border-left: 1px solid rgba(255,255,255,0.05);
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+.logo-orbe:hover {
+    transform: scale(1.1); /* Dá um zoom mágico ao passar o mouse */
+    filter: drop-shadow(0 0 15px rgba(230, 57, 70, 0.4));
 }
 
+footer { text-align: center; padding: 30px; margin-top: 40px; color: var(--text-secondary); font-size: 0.9rem; border-top: 1px solid rgba(255, 255, 255, 0.05); }
 
-/* --- CONTROLES DA IMAGEM --- */
-.moldura-imagem img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* As variáveis CSS que o nosso JavaScript vai alterar quando o usuário mover a barra */
-    object-position: var(--pos-x, 50%) var(--pos-y, 50%);
-    transition: object-position 0.1s ease-out;
+/* --- 4. COMPONENTES REUTILIZÁVEIS --- */
+/* Inputs */
+.input-orbe, .textarea-orbe, .select-orbe { width: 100%; background-color: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-primary); padding: 10px; margin-bottom: 10px; border-radius: 4px; transition: all 0.3s; }
+.input-orbe:focus, .textarea-orbe:focus, .select-orbe:focus { outline: none; border-color: var(--cor-luz-branca); box-shadow: 0 0 10px var(--cor-luz-suave); }
+
+/* Botões Principais */
+a.btn-orbe, button.btn-orbe { text-decoration: none; display: inline-block; background-color: transparent; color: var(--text-primary); border: 1px solid rgba(255, 255, 255, 0.2); padding: 12px 24px; border-radius: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; text-align: center; }
+a.btn-orbe:hover, button.btn-orbe:hover { border-color: var(--cor-luz-branca); box-shadow: 0 0 15px var(--cor-luz-suave), 0 0 5px rgba(255, 255, 255, 0.5); transform: translateY(-2px); }
+
+/* Botões Secundários */
+.btn-pequeno { padding: 8px 16px; font-size: 0.85rem; }
+.btn-acao { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.85rem; transition: 0.2s; font-weight: bold; }
+.btn-acao:hover { color: var(--cor-luz-branca); }
+.btn-perigo:hover { color: var(--cor-detalhe-vermelho); }
+
+/* Tipografia Comum */
+.titulo-secao { color: var(--cor-luz-branca); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-size: 1.2rem; }
+
+/* --- MODAIS E POP-UPS --- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s ease;
 }
-
-.controles-imagem {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
+.modal-overlay.ativo { opacity: 1; pointer-events: auto; }
+.modal-box {
+    background: var(--bg-surface); padding: 30px; border-radius: 12px;
+    width: 90%; max-width: 400px; border-top: 4px solid var(--cor-detalhe-vermelho);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8); transform: translateY(-20px); transition: 0.3s ease;
 }
-
-/* Estilizando as barras de rolagem (Sliders) para combinar com o tema */
-.range-orbe {
-    width: 100%;
-    accent-color: var(--cor-detalhe-vermelho);
-    cursor: ew-resize;
-}
-#pan-y { cursor: ns-resize; }
-
-
-/* --- INVENTÁRIO EM LISTA VERTICAL (ESTILO TABELA) --- */
-/* --- INVENTÁRIO EM LISTA VERTICAL (NOVO) --- */
-.form-inventario-linha {
-    display: grid;
-    /* Redimensionado: Nome | Imagem(URL) | Descrição | Botão */
-    grid-template-columns: 2fr 2fr 4fr auto;
-    gap: 10px;
-    margin-bottom: 20px;
-    align-items: start;
-}
-
-.lista-inventario-vertical {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.linha-item {
-    align-items: start;
-    background-color: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    border-radius: 8px;
-    transition: all 0.2s;
-}
-
-.linha-item:hover {
-    border-color: var(--cor-luz-branca);
-    background-color: rgba(255, 255, 255, 0.04);
-}
-
-
-/* 1. SE TEM IMAGEM: A Imagem ganha 1 fração de espaço e os Textos ganham 4 frações */
-.linha-item.com-imagem {
-    display: grid;
-    grid-template-columns: 1fr 4fr 100px;
-    gap: 20px;
-}
-
-/* 2. SE NÃO TEM IMAGEM: O Texto estica e toma conta do card até bater nos botões */
-.linha-item.sem-imagem {
-    display: grid;
-    grid-template-columns: 1fr 100px;
-    gap: 20px;
-}
-
-/* --- A NOVA IMAGEM (MAIOR E DESTACADA) --- */
-..item-img-mini {
-    width: 100% !important; /* O !important obriga o navegador a esquecer o quadradinho antigo */
-    height: auto !important;
-    aspect-ratio: 1 / 1; /* Força o quadrado perfeito independentemente da largura */
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    background-color: transparent;
-}
-
-.item-img-mini img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block; /* Remove espaços fantasmas debaixo da foto */
-}
-
-/* --- A ÁREA DE TEXTO (BLINDADA CONTRA BUGS) --- */
-.item-detalhes {
-    display: flex;
-    flex-direction: column;
-    /* O SEGREDO: Impede que textos gigantes quebrem o CSS Grid e empurrem a tela */
-    min-width: 0;
-}
-
-.item-detalhes h4 {
-    color: var(--cor-luz-branca);
-    font-size: 1.2rem;
-    margin-bottom: 8px;
-
-    /* Força palavras infinitas a quebrarem de linha */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-}
-
-.item-descricao-scroll {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.5;
-    /* Ajustámos a altura para alinhar perfeitamente com a imagem de 120px */
-    max-height: 110px;
-    overflow-y: auto;
-    padding-right: 10px;
-
-    /* A MÁGICA CONTRA O "AAAAA...": Se a palavra for maior que a tela, corta! */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
-}
-
-/* Deixando a barra de rolagem com um visual dark/moderno */
-.item-descricao-scroll::-webkit-scrollbar { width: 6px; }
-.item-descricao-scroll::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
-.item-descricao-scroll::-webkit-scrollbar-thumb { background: var(--cor-detalhe-vermelho); border-radius: 4px; }
-
-/* --- BOTÕES ALINHADOS --- */
-.item-acoes {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-    height: 100%;
-}
-
-.cabecalho-tabela {
-    display: grid;
-    /* Grid exato da linha do item para alinhar os títulos */
-    grid-template-columns: 50px 3fr 1fr 1fr 100px;
-    gap: 15px;
-    padding: 10px 15px;
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    margin-bottom: 10px;
-}
-
-.lista-inventario-vertical {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-
-
-
-.item-detalhes h4 {
-    color: var(--cor-luz-branca);
-    font-size: 1rem;
-    margin-bottom: 4px;
-}
-
-.item-detalhes p {
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-    line-height: 1.3;
-}
+.modal-overlay.ativo .modal-box { transform: translateY(0); }

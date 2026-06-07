@@ -1,0 +1,54 @@
+@import url('orbe.css');
+
+.grid-layout { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 20px; max-width: 1400px; margin: 40px auto; padding: 0 20px; }
+.coluna-card { background-color: var(--bg-surface); border-radius: 12px; padding: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease; }
+.card-central { border-top: 3px solid var(--cor-detalhe-vermelho); }
+.coluna-card:hover { transform: translateY(-2px); border-color: var(--cor-luz-branca); box-shadow: 0 10px 40px var(--cor-luz-suave), 0 0 15px rgba(255, 255, 255, 0.3); }
+
+/* Imagem Retrato */
+.moldura-imagem { width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.1); background-color: #000; }
+.moldura-imagem img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos-x, 50%) var(--pos-y, 50%); transition: object-position 0.1s ease-out; }
+.controles-imagem { display: flex; gap: 10px; margin-top: 10px; }
+.range-orbe { width: 100%; accent-color: var(--cor-detalhe-vermelho); cursor: ew-resize; }
+#pan-y { cursor: ns-resize; }
+
+/* Atributos */
+.nivel-box { display: flex; justify-content: space-between; align-items: center; background-color: rgba(255, 255, 255, 0.02); padding: 15px; border-radius: 6px; margin-bottom: 20px; border-left: 3px solid var(--cor-detalhe-vermelho); }
+.destaque-branco { color: var(--cor-luz-branca); font-size: 1.2rem; font-weight: bold; }
+.grid-atributos { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+.atributo-item label { display: block; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 5px; }
+.subtitulo-secao { color: var(--text-secondary); font-size: 1rem; margin: 20px 0 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
+.grid-substatus { display: flex; flex-direction: column; gap: 10px; }
+.input-curto { width: 80px; }
+
+/* Habilidades */
+.form-container { background-color: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05); }
+.divisor { border: 0; height: 1px; background: linear-gradient(to right, transparent, var(--cor-detalhe-vermelho), transparent); margin: 20px 0; }
+.card-mini { background-color: rgba(255, 255, 255, 0.02); border-left: 2px solid var(--cor-luz-branca); padding: 12px; border-radius: 4px; margin-bottom: 10px; }
+.card-mini-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.badge-tipo { background-color: rgba(139, 30, 40, 0.2); color: #ffb3b3; font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; border: 1px solid var(--cor-detalhe-vermelho); }
+.card-acoes { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+
+/* Inventario Expansivel */
+.secao-inferior { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+.caixa-expansivel { background-color: var(--bg-surface); border-radius: 8px; border-left: 4px solid var(--cor-detalhe-vermelho); padding: 10px 20px; }
+.caixa-expansivel summary { cursor: pointer; margin-bottom: 0; padding: 15px 0; list-style: none; color: var(--cor-luz-branca); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+.form-inventario-linha { display: grid; grid-template-columns: 2fr 2fr 4fr auto; gap: 10px; margin-bottom: 20px; align-items: start; }
+.lista-inventario-vertical { display: flex; flex-direction: column; gap: 15px; }
+
+/* Layout da Linha do Inventario */
+.linha-item { align-items: start; background-color: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; transition: all 0.2s; }
+.linha-item:hover { border-color: var(--cor-luz-branca); background-color: rgba(255, 255, 255, 0.04); }
+.linha-item.com-imagem { display: grid; grid-template-columns: 25% 1fr 100px; gap: 20px; }
+.linha-item.sem-imagem { display: grid; grid-template-columns: 1fr 100px; gap: 20px; }
+
+/* Imagem e Texto do Inventario */
+.item-img-mini { width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.4); background-color: transparent; }
+.item-img-mini img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.item-detalhes { display: flex; flex-direction: column; min-width: 0; }
+.item-detalhes h4 { color: var(--cor-luz-branca); font-size: 1.2rem; margin-bottom: 8px; overflow-wrap: break-word; word-wrap: break-word; }
+.item-descricao-scroll { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; max-height: 110px; overflow-y: auto; padding-right: 10px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }
+.item-descricao-scroll::-webkit-scrollbar { width: 6px; }
+.item-descricao-scroll::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+.item-descricao-scroll::-webkit-scrollbar-thumb { background: var(--cor-detalhe-vermelho); border-radius: 4px; }
+.item-acoes { display: flex; flex-direction: column; gap: 10px; justify-content: center; height: 100%; }

@@ -17,40 +17,78 @@ import java.util.List;
 @WebServlet("/api/fichas")
 public class FichaServlet extends HttpServlet {
 
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         try {
-            // 1. Captura o parâmetro da URL (ex: ?usuarioId=1)
             String usuarioIdParam = request.getParameter("usuarioId");
+            String campanhaIdParam = request.getParameter("campanhaId");
+            String idParam = request.getParameter("id"); // NOVO: Captura a busca por ID
 
-            // Se o front-end esquecer de mandar o ID, devolvemos um erro avisando
-            if (usuarioIdParam == null || usuarioIdParam.isEmpty()) {
+            dao.FichaDAO dao = new dao.FichaDAO();
+            List<model.Ficha> lista = new java.util.ArrayList<>();
+
+            // Decide qual é o tipo de busca que o Front-end pediu
+            if (idParam != null && !idParam.isEmpty()) {
+                model.Ficha ficha = dao.buscarPorId(Integer.parseInt(idParam));
+                if (ficha != null) lista.add(ficha);
+            } else if (usuarioIdParam != null && !usuarioIdParam.isEmpty()) {
+                lista = dao.buscarPorUsuario(Integer.parseInt(usuarioIdParam));
+            } else if (campanhaIdParam != null && !campanhaIdParam.isEmpty()) {
+                lista = dao.buscarPorCampanha(Integer.parseInt(campanhaIdParam));
+            } else {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write("{\"erro\": \"É necessário informar o usuarioId na URL.\"}");
                 return;
             }
 
-            // Converte o texto da URL para número inteiro
-            int usuarioId = Integer.parseInt(usuarioIdParam);
-
-            // 2. Aciona o DAO para buscar as fichas desse utilizador específico
-            FichaDAO dao = new FichaDAO();
-            List<Ficha> fichasDoUsuario = dao.buscarPorUsuario(usuarioId);
-
-            // 3. Traduz para JSON e envia para a tela
-            Gson tradutor = new Gson();
-            String json = tradutor.toJson(fichasDoUsuario);
-            response.getWriter().write(json);
+            response.getWriter().write(new Gson().toJson(lista));
 
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"erro\": \"Erro interno ao buscar as fichas.\"}");
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        try {
+            // 1. Pega o JSON do front-end e transforma na Ficha
+            Ficha novaFicha = new Gson().fromJson(request.getReader(), Ficha.class);
+
+            // 2. CRAVANDO TODOS OS ATRIBUTOS EM 20 (Como planeado para esta fase)
+            novaFicha.setCorpo(20); novaFicha.setSentidos(20); novaFicha.setMente(20); novaFicha.setSorte(20);
+            novaFicha.setForca(20); novaFicha.setVelocidade(20); novaFicha.setDestreza(20); novaFicha.setVigor(20);
+            novaFicha.setSabedoria(20); novaFicha.setInteligencia(20);
+
+            // Cálculos automáticos baseados nos 20
+            novaFicha.setVida((20 * 5) + (20 * 0.5f)); // Fica 110
+            novaFicha.setSagrada(20 + (20 * 2)); // Fica 60
+            novaFicha.setAmaldicoada(20 + (20 * 2)); // Fica 60
+            novaFicha.setPesquisa(20);
+            novaFicha.setConhecimento(20);
+            novaFicha.setNivel(1);
+            novaFicha.setExp(0);
+
+            // 3. Manda o DAO salvar no banco
+            FichaDAO dao = new FichaDAO();
+            dao.cadastrar(novaFicha);
+
+            // 4. Devolve o sinal de Sucesso pro JavaScript!
+            response.setStatus(HttpServletResponse.SC_CREATED);
+            response.getWriter().write("{\"mensagem\": \"Ficha criada com sucesso!\"}");
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"erro\": \"Erro ao criar ficha.\"}");
             e.printStackTrace();
         }
     }
+
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
