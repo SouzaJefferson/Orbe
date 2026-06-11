@@ -158,43 +158,80 @@ document.querySelectorAll('.grid-atributos input').forEach(input => {
 });
 
 // ============================================================================
-// 3. CRUD DE HABILIDADES
+// 3. CRUD DE HABILIDADES (Cores e Edição)
 // ============================================================================
-document.getElementById('btn-add-hab').addEventListener('click', async () => {
+let idHabEmEdicao = null;
+let habilidadesCache = []; // Guarda as habilidades na memória para edição rápida
+
+// Função inteligente que lê o texto e devolve a cor do CSS
+function obterClasseBadge(tipo) {
+    if (!tipo) return '';
+    const texto = tipo.toLowerCase();
+    if (texto.includes('inspiração') || texto.includes('inspiracao')) return 'badge-inspiracao';
+    if (texto.includes('postura')) return 'badge-postura';
+    return ''; // Se for Tática (ou outra coisa qualquer), assume a cor vermelha padrão
+}
+
+// Ouve o clique do botão Adicionar/Salvar
+const btnAddHab = document.getElementById('btn-add-hab');
+btnAddHab.onclick = async () => {
     const titulo = document.getElementById('hab-titulo').value;
     const tipo = document.getElementById('hab-tipo').value;
     const descricao = document.getElementById('hab-desc').value;
 
     if (!titulo) return alert("Dê um título à habilidade!");
 
-    const novaHab = { fichaId: fichaAtualId, titulo: titulo, tipo: tipo, descricao: descricao };
+    const dadosHab = { fichaId: fichaAtualId, titulo: titulo, tipo: tipo, descricao: descricao };
 
-    await fetch(`${URL_BASE}/api/habilidades`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(novaHab)
-    });
+    if (idHabEmEdicao) {
+        // MODO EDIÇÃO (PUT)
+        dadosHab.id = idHabEmEdicao;
+        await fetch(`${URL_BASE}/api/habilidades`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosHab)
+        });
 
+        // Restaura a estética do botão
+        idHabEmEdicao = null;
+        btnAddHab.textContent = "Adicionar";
+        btnAddHab.style.backgroundColor = "transparent";
+    } else {
+        // MODO CRIAÇÃO (POST)
+        await fetch(`${URL_BASE}/api/habilidades`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosHab)
+        });
+    }
+
+    // Limpa os campos e recarrega
     document.getElementById('hab-titulo').value = '';
     document.getElementById('hab-desc').value = '';
     carregarHabilidades(fichaAtualId);
-});
+};
 
+// Carrega as habilidades pintando as Badges
 async function carregarHabilidades(fichaId) {
     const resposta = await fetch(`${URL_BASE}/api/habilidades?fichaId=${fichaId}`);
-    const habilidades = await resposta.json();
+    habilidadesCache = await resposta.json();
+
     const container = document.getElementById('hab-load');
     container.innerHTML = '';
 
-    habilidades.forEach(hab => {
+    habilidadesCache.forEach(hab => {
+        // Descobre a cor antes de criar o HTML
+        const classeCor = obterClasseBadge(hab.tipo);
+
         container.innerHTML += `
             <div class="card-mini">
                 <div class="card-mini-header">
                     <h4>${hab.titulo}</h4>
-                    <span class="badge-tipo">${hab.tipo}</span>
+                    <span class="badge-tipo ${classeCor}">${hab.tipo}</span>
                 </div>
                 <p>${hab.descricao}</p>
                 <div class="card-acoes">
+                    <button class="btn-acao" onclick="prepararEdicaoHabilidade(${hab.id})">Editar</button>
                     <button class="btn-acao btn-perigo" onclick="excluirHabilidade(${hab.id})">Excluir</button>
                 </div>
             </div>
@@ -202,6 +239,23 @@ async function carregarHabilidades(fichaId) {
     });
 }
 
+// Prepara o formulário quando o jogador clica em Editar
+window.prepararEdicaoHabilidade = function(habId) {
+    const hab = habilidadesCache.find(h => h.id === habId);
+    if (!hab) return;
+
+    document.getElementById('hab-titulo').value = hab.titulo;
+    document.getElementById('hab-tipo').value = hab.tipo;
+    document.getElementById('hab-desc').value = hab.descricao;
+
+    idHabEmEdicao = hab.id;
+
+    // Destaca o botão para o jogador não se esquecer que está a editar
+    btnAddHab.textContent = "Salvar Edição";
+    btnAddHab.style.backgroundColor = "var(--cor-detalhe-vermelho)";
+};
+
+// Excluir
 window.excluirHabilidade = async function(habId) {
     if (confirm("Tem a certeza que quer apagar esta habilidade?")) {
         await fetch(`${URL_BASE}/api/habilidades?id=${habId}`, { method: 'DELETE' });

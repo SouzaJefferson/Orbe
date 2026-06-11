@@ -54,4 +54,19 @@ public class HabilidadeDAO {
             System.out.println("Erro ao excluir habilidade: " + e.getMessage());
         }
     }
+
+    // ATUALIZAR HABILIDADE (Modo Edição)
+    public void atualizar(Habilidade hab) {
+        String sql = "UPDATE habilidades SET titulo = ?, tipo = ?, descricao = ? WHERE id = ?";
+        try (Connection conecta = ConexaoDB.conectar();
+             PreparedStatement stmt = conecta.prepareStatement(sql)) {
+            stmt.setString(1, hab.getTitulo());
+            stmt.setString(2, hab.getTipo());
+            stmt.setString(3, hab.getDescricao());
+            stmt.setInt(4, hab.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar habilidade: " + e.getMessage());
+        }
+    }
 }

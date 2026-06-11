@@ -26,7 +26,29 @@
 .divisor { border: 0; height: 1px; background: linear-gradient(to right, transparent, var(--cor-detalhe-vermelho), transparent); margin: 20px 0; }
 .card-mini { background-color: rgba(255, 255, 255, 0.02); border-left: 2px solid var(--cor-luz-branca); padding: 12px; border-radius: 4px; margin-bottom: 10px; }
 .card-mini-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.badge-tipo { background-color: rgba(139, 30, 40, 0.2); color: #ffb3b3; font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; border: 1px solid var(--cor-detalhe-vermelho); }
+/* Badge Padrão (Vermelho / Tática) */
+.badge-tipo {
+    background-color: rgba(139, 30, 40, 0.2);
+    color: #ffb3b3;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    border: 1px solid var(--cor-detalhe-vermelho);
+}
+
+/* Badge Inspiração (Roxo) */
+.badge-inspiracao {
+    background-color: rgba(107, 91, 149, 0.2);
+    color: #d1c4e9;
+    border-color: #8e44ad;
+}
+
+/* Badge Postura (Verde) */
+.badge-postura {
+    background-color: rgba(46, 139, 87, 0.2);
+    color: #a8e6cf;
+    border-color: #27ae60;
+}
 .card-acoes { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
 
 /* Inventario Expansivel */

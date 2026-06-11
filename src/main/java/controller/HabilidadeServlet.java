@@ -31,6 +31,23 @@ public class HabilidadeServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_CREATED);
     }
 
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        try {
+            Habilidade habEditada = new Gson().fromJson(request.getReader(), Habilidade.class);
+            HabilidadeDAO dao = new HabilidadeDAO();
+            dao.atualizar(habEditada);
+
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write("{\"mensagem\": \"Habilidade editada com sucesso!\"}");
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"erro\": \"Erro ao editar habilidade.\"}");
+        }
+    }
+
     // EXCLUIR (DELETE)
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
