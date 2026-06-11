@@ -135,8 +135,16 @@
         if(fichas.length === 0) { grid.innerHTML = '<p>Nenhum jogador usou o seu código de convite ainda.</p>'; return; }
 
         fichas.forEach(f => {
+            // Pega a primeira letra do nome
+            const primeiraLetra = f.nomePersonagem ? f.nomePersonagem.charAt(0).toUpperCase() : '?';
+
             grid.innerHTML += `
                 <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 6px; border-left: 3px solid var(--cor-luz-branca); text-align: center;">
+
+                    <div style="width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 10px auto; border: 2px solid var(--cor-detalhe-vermelho); display: flex; justify-content: center; align-items: center; background-color: rgba(255,255,255,0.05);">
+                        <span style="font-size: 2rem; font-weight: bold; color: var(--cor-luz-branca);">${primeiraLetra}</span>
+                    </div>
+
                     <h4 style="margin-bottom: 5px;">${f.nomePersonagem}</h4>
                     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 15px;">${f.raca} | ${f.estilos}</p>
                     <p style="font-size: 0.8rem; margin-bottom: 10px;">Nv: ${f.nivel} | XP: ${f.exp}</p>

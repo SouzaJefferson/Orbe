@@ -112,11 +112,15 @@
         }
 
         fichas.forEach(f => {
+            // Pega a primeira letra do nome para o Avatar
+            const primeiraLetra = f.nomePersonagem ? f.nomePersonagem.charAt(0).toUpperCase() : '?';
+
             grid.innerHTML += `
                 <div class="coluna-card" style="text-align: center;">
-                    <div style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 0 auto 15px auto; border: 2px solid var(--cor-detalhe-vermelho);">
-                        <img src="${f.imagem || '../src/fotorpg1.png'}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 15px auto; border: 2px solid var(--cor-detalhe-vermelho); display: flex; justify-content: center; align-items: center; background-color: rgba(255,255,255,0.05);">
+                        <span style="font-size: 2.5rem; font-weight: bold; color: var(--cor-luz-branca);">${primeiraLetra}</span>
                     </div>
+
                     <h3 style="color: var(--cor-luz-branca);">${f.nomePersonagem}</h3>
                     <p style="color: var(--text-secondary); font-size: 0.9rem;">${f.raca} - ${f.estilos}</p>
                     <p style="font-size: 0.85rem; margin: 10px 0;">Nível: ${f.nivel} | XP: ${f.exp}</p>

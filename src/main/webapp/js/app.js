@@ -85,6 +85,13 @@ function preencherDadosDaFicha(personagem) {
     document.getElementById('attr-sabedoria').value = personagem.sabedoria || 0;
     document.getElementById('attr-inteligencia').value = personagem.inteligencia || 0;
 
+
+
+    // -- Lógica do Avatar (Primeira Letra) --
+    const primeiraLetra = personagem.nomePersonagem ? personagem.nomePersonagem.charAt(0).toUpperCase() : '?';
+    const elLetra = document.getElementById('letra-avatar');
+    if (elLetra) elLetra.textContent = primeiraLetra;
+
     // Atualiza os substatus matemáticos imediatamente
     calcularSubstatus();
 }
@@ -345,18 +352,3 @@ document.getElementById('btn-add-item').addEventListener('click', async () => {
     carregarInventario(fichaAtualId);
 });
 
-// ============================================================================
-// 6. CONTROLOS DA IMAGEM DO PERSONAGEM (PÂNICA)
-// ============================================================================
-const panX = document.getElementById('pan-x');
-const panY = document.getElementById('pan-y');
-const imgPersonagem = document.getElementById('img-personagem');
-
-if (panX && panY && imgPersonagem) {
-    function atualizarPosicaoImagem() {
-        imgPersonagem.style.setProperty('--pos-x', `${panX.value}%`);
-        imgPersonagem.style.setProperty('--pos-y', `${panY.value}%`);
-    }
-    panX.addEventListener('input', atualizarPosicaoImagem);
-    panY.addEventListener('input', atualizarPosicaoImagem);
-}
